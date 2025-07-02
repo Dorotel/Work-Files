@@ -1,0 +1,15 @@
+Category,Question,Answer Type,Required/Optional,Notes,Sample Answer,Priority
+Project Setup & Requirements,What is the primary purpose of this WinForm application?,Text,Required,Define the main business objective or function,Customer order management system for retail business,High
+Project Setup & Requirements,Who is the target audience for this application?,Text,Required,End users - internal staff external customers etc.,Sales representatives and order processing staff,High
+Project Setup & Requirements,What is the expected number of concurrent users?,Number,Required,Helps determine performance requirements,15-20 concurrent users,High
+Project Setup & Requirements,What operating systems must be supported?,Multiple Choice,Required,Windows 10 Windows 11 Windows Server versions,Windows 10 and Windows 11,High
+Project Setup & Requirements,What .NET Framework version should be used?,Multiple Choice,Required,.NET Framework 4.8 .NET 5 .NET 6+ .NET Core,.NET 6,High
+Form Design & Layout,What type of form is this?,Multiple Choice,Required,Single form MDI application dialog wizard multi-step,Single form with multiple tabs,High
+Form Design & Layout,What should be the default form size?,Text,Required,Width x Height in pixels or maximized/minimized state,1200x800 pixels resizable,Medium
+Form Design & Layout,Should the form be resizable?,Yes/No,Required,Affects layout design and control anchoring,Yes,Medium
+Data Management & Business Logic,What data sources will the form connect to?,Text,Required,SQL Server Oracle MySQL XML files web services,SQL Server database,High
+Data Management & Business Logic,What type of data operations are needed?,Multiple Choice,Required,Create Read Update Delete Search Filter Sort,Create Read Update Search Filter,High
+User Interface & Experience,What is the expected user skill level?,Multiple Choice,Required,Novice intermediate advanced power users,Intermediate,Medium
+Security & Access Control,What authentication method will be used?,Multiple Choice,Required,Windows Authentication SQL Server custom LDAP,Windows Authentication,High
+Testing & Quality Assurance,What types of testing are required?,Multiple Choice,Required,Unit integration system UAT performance,Unit integration UAT,High
+Deployment & Maintenance,What deployment method will be used?,Multiple Choice,Required,ClickOnce Windows Installer MSI MSIX,ClickOnce,Medium

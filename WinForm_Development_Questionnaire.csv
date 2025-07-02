@@ -1,0 +1,102 @@
+Category,Question,Answer Type,Required/Optional,Notes
+Project Setup & Requirements,What is the primary purpose of this WinForm application?,Text,Required,Define the main business objective or function
+Project Setup & Requirements,Who is the target audience for this application?,Text,Required,End users - internal staff external customers etc.
+Project Setup & Requirements,What is the expected number of concurrent users?,Number,Required,Helps determine performance requirements
+Project Setup & Requirements,What operating systems must be supported?,Multiple Choice,Required,Windows 10 Windows 11 Windows Server versions
+Project Setup & Requirements,What .NET Framework version should be used?,Multiple Choice,Required,.NET Framework 4.8 .NET 5 .NET 6+ .NET Core
+Project Setup & Requirements,Are there any specific compliance requirements?,Text,Optional,HIPAA SOX PCI-DSS GDPR industry standards
+Project Setup & Requirements,What is the project timeline and key milestones?,Text,Required,Development phases testing deployment dates
+Project Setup & Requirements,What is the budget range for this project?,Text,Optional,Helps scope features and complexity
+Project Setup & Requirements,Are there existing systems this must integrate with?,Text,Required,ERP CRM databases web services APIs
+Project Setup & Requirements,What are the performance requirements?,Text,Required,Response time data load limits concurrent users
+Form Design & Layout,What type of form is this?,Multiple Choice,Required,Single form MDI application dialog wizard multi-step
+Form Design & Layout,What should be the default form size?,Text,Required,Width x Height in pixels or maximized/minimized state
+Form Design & Layout,Should the form be resizable?,Yes/No,Required,Affects layout design and control anchoring
+Form Design & Layout,What is the preferred color scheme/theme?,Text,Optional,Corporate branding colors accessibility considerations
+Form Design & Layout,Should the form support multiple languages?,Yes/No,Required,Internationalization and localization requirements
+Form Design & Layout,What controls are needed on the form?,Text,Required,TextBoxes ComboBoxes DataGridView Buttons Labels etc.
+Form Design & Layout,How should the form handle different screen resolutions?,Multiple Choice,Required,Scale fit fixed layout responsive design
+Form Design & Layout,Are there any accessibility requirements?,Text,Optional,Screen reader support keyboard navigation high contrast
+Form Design & Layout,Should the form have a menu bar?,Yes/No,Required,Main menu structure and options
+Form Design & Layout,Should the form have a toolbar?,Yes/No,Required,Quick access buttons and functions
+Form Design & Layout,What should happen when the form is closed?,Multiple Choice,Required,Save prompt exit immediately minimize to tray
+Form Design & Layout,Should the form remember its position and size?,Yes/No,Optional,User preference persistence
+Form Design & Layout,Are there any specific layout patterns to follow?,Text,Optional,Tab order logical grouping visual hierarchy
+Data Management & Business Logic,What data sources will the form connect to?,Text,Required,SQL Server Oracle MySQL XML files web services
+Data Management & Business Logic,What type of data operations are needed?,Multiple Choice,Required,Create Read Update Delete Search Filter Sort
+Data Management & Business Logic,How should data validation be handled?,Text,Required,Client-side server-side real-time on-submit
+Data Management & Business Logic,What are the required field validations?,Text,Required,Required fields format validation business rules
+Data Management & Business Logic,How should errors be displayed to users?,Multiple Choice,Required,Message boxes status bar inline validation tooltips
+Data Management & Business Logic,Should the form support data binding?,Yes/No,Required,Automatic synchronization between controls and data
+Data Management & Business Logic,What business rules need to be enforced?,Text,Required,Calculation rules workflow approval processes
+Data Management & Business Logic,Should the form cache data locally?,Yes/No,Optional,Offline capability performance considerations
+Data Management & Business Logic,How should concurrent data access be handled?,Multiple Choice,Required,Pessimistic locking optimistic locking no locking
+Data Management & Business Logic,What audit trail requirements exist?,Text,Optional,Track changes user actions timestamps
+Data Management & Business Logic,Should the form support data import/export?,Yes/No,Optional,File formats CSV Excel XML JSON
+Data Management & Business Logic,What reporting capabilities are needed?,Text,Optional,Crystal Reports built-in reports PDF export
+User Interface & Experience,What is the expected user skill level?,Multiple Choice,Required,Novice intermediate advanced power users
+User Interface & Experience,Should the form provide tooltips and help?,Yes/No,Required,Context-sensitive help user guidance
+User Interface & Experience,What keyboard shortcuts should be supported?,Text,Optional,Function keys Ctrl+key combinations
+User Interface & Experience,Should the form support drag and drop?,Yes/No,Optional,File drops control rearrangement
+User Interface & Experience,What feedback should users get for long operations?,Multiple Choice,Required,Progress bars status messages hourglasses
+User Interface & Experience,Should the form support undo/redo functionality?,Yes/No,Optional,Action history and reversal
+User Interface & Experience,What printing capabilities are required?,Text,Optional,Direct printing print preview page setup
+User Interface & Experience,Should the form support copy/paste operations?,Yes/No,Optional,Clipboard integration data transfer
+User Interface & Experience,What search and filter capabilities are needed?,Text,Optional,Quick search advanced filters saved searches
+User Interface & Experience,Should the form support customizable layouts?,Yes/No,Optional,User preferences column ordering
+User Interface & Experience,What notification methods should be used?,Multiple Choice,Optional,Pop-ups system tray email SMS
+User Interface & Experience,Should the form support themes or skins?,Yes/No,Optional,Visual customization branding
+Technical Implementation,What development tools will be used?,Multiple Choice,Required,Visual Studio VS Code Rider
+Technical Implementation,What source control system will be used?,Multiple Choice,Required,Git TFS SVN Mercurial
+Technical Implementation,What application architecture pattern?,Multiple Choice,Required,MVP MVC MVVM N-tier Clean Architecture
+Technical Implementation,Should the application use dependency injection?,Yes/No,Optional,IoC container framework selection
+Technical Implementation,What logging framework should be used?,Multiple Choice,Optional,NLog Serilog log4net built-in logging
+Technical Implementation,What testing frameworks are required?,Multiple Choice,Optional,MSTest NUnit xUnit Moq
+Technical Implementation,Should the application support plugins?,Yes/No,Optional,Extensibility MEF architecture
+Technical Implementation,What configuration management approach?,Multiple Choice,Required,App.config web.config JSON XML database
+Technical Implementation,Should the application support multiple instances?,Yes/No,Required,Single instance or multi-instance behavior
+Technical Implementation,What exception handling strategy?,Text,Required,Global handlers logging user-friendly messages
+Technical Implementation,Should the application use asynchronous operations?,Yes/No,Optional,Background tasks responsive UI
+Technical Implementation,What memory management considerations?,Text,Optional,Large datasets disposal patterns performance
+Security & Access Control,What authentication method will be used?,Multiple Choice,Required,Windows Authentication SQL Server custom LDAP
+Security & Access Control,Should the application support role-based access?,Yes/No,Required,User roles permissions feature access
+Security & Access Control,What data encryption requirements exist?,Text,Optional,Connection strings sensitive data at rest in transit
+Security & Access Control,Should user sessions be tracked?,Yes/No,Optional,Session timeout activity monitoring
+Security & Access Control,What password policies should be enforced?,Text,Optional,Complexity requirements expiration lockout
+Security & Access Control,Should the application log security events?,Yes/No,Required,Failed logins privilege escalation access attempts
+Security & Access Control,Are there any data masking requirements?,Text,Optional,PII SSN credit card number protection
+Security & Access Control,Should the application support single sign-on?,Yes/No,Optional,SSO integration Active Directory
+Security & Access Control,What audit requirements exist for security?,Text,Optional,Compliance reporting access logs
+Security & Access Control,Should the application validate user inputs?,Yes/No,Required,SQL injection XSS prevention input sanitization
+Integration & Connectivity,What external systems need integration?,Text,Required,APIs web services databases file systems
+Integration & Connectivity,What communication protocols are required?,Multiple Choice,Required,HTTP HTTPS TCP UDP WCF REST GraphQL
+Integration & Connectivity,Should the application work offline?,Yes/No,Required,Local data synchronization capabilities
+Integration & Connectivity,What file import/export formats needed?,Multiple Choice,Optional,CSV Excel XML JSON PDF
+Integration & Connectivity,Should the application send notifications?,Yes/No,Optional,Email SMS push notifications webhooks
+Integration & Connectivity,What printing requirements exist?,Text,Optional,Local network cloud printers reports labels
+Integration & Connectivity,Should the application support barcode scanning?,Yes/No,Optional,Scanner integration barcode types
+Integration & Connectivity,What backup and restore capabilities?,Text,Optional,Data backup configuration backup automation
+Integration & Connectivity,Should the application support web services?,Yes/No,Optional,SOAP REST API consumption or hosting
+Integration & Connectivity,What third-party components are needed?,Text,Optional,Charts grids PDF viewers reporting tools
+Testing & Quality Assurance,What types of testing are required?,Multiple Choice,Required,Unit integration system UAT performance
+Testing & Quality Assurance,Should automated testing be implemented?,Yes/No,Optional,Test automation framework continuous integration
+Testing & Quality Assurance,What are the performance benchmarks?,Text,Required,Response times throughput resource usage
+Testing & Quality Assurance,What browsers/environments need testing?,Text,Required,Operating systems .NET versions hardware configs
+Testing & Quality Assurance,Should load testing be performed?,Yes/No,Optional,Concurrent users stress testing
+Testing & Quality Assurance,What accessibility testing is needed?,Text,Optional,Screen readers keyboard navigation color contrast
+Testing & Quality Assurance,Should the application have test data?,Yes/No,Required,Sample data test scenarios edge cases
+Testing & Quality Assurance,What documentation is required?,Multiple Choice,Required,User manual technical docs API docs training materials
+Testing & Quality Assurance,Should beta testing be conducted?,Yes/No,Optional,User acceptance testing feedback collection
+Testing & Quality Assurance,What error reporting mechanisms?,Text,Required,Error logs crash dumps user feedback
+Deployment & Maintenance,What deployment method will be used?,Multiple Choice,Required,ClickOnce Windows Installer MSI MSIX
+Deployment & Maintenance,Should the application support auto-updates?,Yes/No,Required,Update mechanism version checking
+Deployment & Maintenance,What are the system requirements?,Text,Required,RAM CPU disk space .NET version OS version
+Deployment & Maintenance,Should the application be portable?,Yes/No,Optional,No installation required USB deployment
+Deployment & Maintenance,What installation prerequisites exist?,Text,Required,.NET Framework SQL Server client tools
+Deployment & Maintenance,Should the application create desktop shortcuts?,Yes/No,Optional,Start menu shortcuts desktop icons
+Deployment & Maintenance,What uninstallation behavior is needed?,Text,Required,Clean removal data retention user settings
+Deployment & Maintenance,Should the application support multiple versions?,Yes/No,Optional,Side-by-side installation version compatibility
+Deployment & Maintenance,What licensing requirements exist?,Text,Optional,License keys activation trial versions
+Deployment & Maintenance,Should usage analytics be collected?,Yes/No,Optional,Feature usage performance metrics crash reports
+Deployment & Maintenance,What maintenance schedule is planned?,Text,Required,Updates patches support lifecycle
+Deployment & Maintenance,Should the application support remote diagnostics?,Yes/No,Optional,Remote troubleshooting log collection
