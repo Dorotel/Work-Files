@@ -24,14 +24,31 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 ### 1. Initialize Analysis Context
 
-Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS. Derive absolute paths:
+**GSC-Enhanced Approach** (Prefer when GSC available):
 
+First, check if GSC commands are available:
+- Run `gsc validate constitution` to collect FEATURE_DIR and constitutional compliance status
+- Run `gsc status` to get AVAILABLE_DOCS and current phase information
+- Optionally run `gsc housekeeping inventory` (read-only) to reference docs-inventory.json for completeness
+
+If GSC commands succeed, use the JSON output directly.
+
+**Fallback Approach** (Legacy compatibility):
+
+If GSC is not available or commands fail, fall back to:
+- Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` once from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS
+
+**Common Path Resolution**:
+
+Derive absolute paths from either approach:
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
 - TASKS = FEATURE_DIR/tasks.md
 
 Abort with an error message if any required file is missing (instruct the user to run missing prerequisite command).
 For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+
+**STRICTLY READ-ONLY**: This analysis command MUST NOT modify any files - preserve this constraint regardless of initialization approach.
 
 ### 2. Load Artifacts (Progressive Disclosure)
 

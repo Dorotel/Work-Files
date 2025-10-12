@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSC Interactive Help - MTM Development Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        #searchInput:focus {
+            border-color: #764ba2;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .command-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .command-card h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .command-card .command-name {
+            background: #f0f4ff;
+            color: #667eea;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .command-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .command-card .examples {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .command-card .examples h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+
+        .command-card code {
+            background: #2d2d2d;
+            color: #a5d6ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            display: block;
+            margin: 5px 0;
+            padding: 8px;
+        }
+
+        .principles-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .principles-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .principle {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+        }
+
+        .principle h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .principle ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .principle li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .principle li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .workflow-diagram {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .workflow-diagram h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .phase {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .phase-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        .phase-name {
+            font-size: 1.2em;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .phase-arrow {
+            font-size: 1.5em;
+        }
+
+        footer {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .phase {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .phase-name {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 GSC Interactive Help</h1>
+            <p class="subtitle">GitHub Copilot Spec Commands - Your Intelligent Development Assistant</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search commands, principles, or examples...">
+        </div>
+
+        <div class="commands-grid" id="commandsGrid">
+            <!-- CREATE -->
+            <div class="command-card" data-keywords="create feature spec tasks new generate">
+                <h2>Create</h2>
+                <div class="command-name">gsc create</div>
+                <p>Create new features, specifications, or task breakdowns following constitutional templates.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc create feature inventory-export</code>
+                    <code>gsc create spec inventory-export</code>
+                    <code>gsc create tasks inventory-export</code>
+                </div>
+            </div>
+
+            <!-- VALIDATE -->
+            <div class="command-card" data-keywords="validate check compliance constitutional code tests ux performance">
+                <h2>Validate</h2>
+                <div class="command-name">gsc validate</div>
+                <p>Validate constitutional compliance across all four principles with detailed violation reports.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc validate constitution</code>
+                    <code>gsc validate code</code>
+                    <code>gsc validate tests</code>
+                    <code>gsc validate ux</code>
+                </div>
+            </div>
+
+            <!-- STATUS -->
+            <div class="command-card" data-keywords="status progress tracking metrics phase current">
+                <h2>Status</h2>
+                <div class="command-name">gsc status</div>
+                <p>Display real-time workflow progress, compliance status, test coverage, and next steps.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc status</code>
+                </div>
+            </div>
+
+            <!-- ROLLBACK -->
+            <div class="command-card" data-keywords="rollback checkpoint restore reset undo snapshot">
+                <h2>Rollback</h2>
+                <div class="command-name">gsc rollback</div>
+                <p>Create checkpoints for safe experimentation and rollback changes when needed.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc rollback checkpoint "before refactor"</code>
+                    <code>gsc rollback list</code>
+                    <code>gsc rollback restore checkpoint-id</code>
+                </div>
+            </div>
+
+            <!-- MEMORY -->
+            <div class="command-card" data-keywords="memory constitution lessons patterns search reference guidance">
+                <h2>Memory</h2>
+                <div class="command-name">gsc memory</div>
+                <p>Access constitutional memory system with guidance, lessons learned, and best practices.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc memory get constitution</code>
+                    <code>gsc memory search "MVVM"</code>
+                    <code>gsc memory list</code>
+                </div>
+            </div>
+
+            <!-- WORKFLOW -->
+            <div class="command-card" data-keywords="workflow orchestrate phases start next complete">
+                <h2>Workflow</h2>
+                <div class="command-name">gsc workflow</div>
+                <p>Orchestrate end-to-end 7-phase feature development with automatic validation gates.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc workflow start my-feature</code>
+                    <code>gsc workflow next</code>
+                    <code>gsc workflow complete</code>
+                </div>
+            </div>
+
+            <!-- HELP -->
+            <div class="command-card" data-keywords="help documentation guide reference">
+                <h2>Help</h2>
+                <div class="command-name">gsc help</div>
+                <p>Display interactive help for all commands and constitutional guidance.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc help</code>
+                    <code>gsc help validate</code>
+                    <code>gsc help constitution</code>
+                </div>
+            </div>
+        </div>
+
+            <!-- HOUSEKEEPING -->
+            <div class="command-card" data-keywords="housekeeping inventory prune archive cleanup purge checkpoints">
+                <h2>Housekeeping</h2>
+                <div class="command-name">gsc housekeeping</div>
+                <p>Documentation inventory and cleanup: scan docs, prune obsolete files, archive backups, and purge old checkpoints.</p>
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <code>gsc housekeeping inventory</code>
+                    <code>gsc housekeeping prune</code>
+                    <code>gsc housekeeping purge-checkpoints --DryRun:$false</code>
+                </div>
+            </div>
+
+        <!-- Workflow Diagram -->
+        <div class="workflow-diagram">
+            <h2>7-Phase Workflow</h2>
+            <div class="phase">
+                <span class="phase-number">1</span>
+                <span class="phase-name">Specification</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">2</span>
+                <span class="phase-name">Planning</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">3</span>
+                <span class="phase-name">Task Breakdown</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">4</span>
+                <span class="phase-name">Implementation</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">5</span>
+                <span class="phase-name">Testing</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">6</span>
+                <span class="phase-name">Validation</span>
+                <span class="phase-arrow">→</span>
+            </div>
+            <div class="phase">
+                <span class="phase-number">7</span>
+                <span class="phase-name">Review</span>
+                <span class="phase-arrow">✓</span>
+            </div>
+        </div>
+
+        <!-- Constitutional Principles -->
+        <div class="principles-section">
+            <h2>Constitutional Principles</h2>
+
+            <div class="principle">
+                <h3>I. Code Quality Excellence</h3>
+                <ul>
+                    <li>Use MVVM Community Toolkit (not ReactiveUI)</li>
+                    <li>Enable nullable reference types</li>
+                    <li>Centralized error handling</li>
+                    <li>Dependency injection for all services</li>
+                </ul>
+            </div>
+
+            <div class="principle">
+                <h3>II. Testing Standards</h3>
+                <ul>
+                    <li>Minimum 80% test coverage</li>
+                    <li>Critical paths require 95% coverage</li>
+                    <li>Follow test naming conventions</li>
+                    <li>Integration tests for database operations</li>
+                </ul>
+            </div>
+
+            <div class="principle">
+                <h3>III. UX Consistency</h3>
+                <ul>
+                    <li>Use Theme V2 dynamic resources (no hardcoded colors)</li>
+                    <li>x:DataType attributes on all UserControls</li>
+                    <li>Material Design icons exclusively</li>
+                    <li>Cross-platform layout compatibility</li>
+                </ul>
+            </div>
+
+            <div class="principle">
+                <h3>IV. Performance Requirements</h3>
+                <ul>
+                    <li>Async/await for all I/O operations</li>
+                    <li>Connection pooling configured (MySQL)</li>
+                    <li>No blocking UI thread operations</li>
+                    <li>Sub-100ms UI response time</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>GSC Enhancement System v1.0.0</strong></p>
+            <p>GitHub Copilot Spec Commands - MTM Development Assistant</p>
+            <p style="margin-top: 10px; color: #999;">Last Updated: October 10, 2025</p>
+        </footer>
+    </div>
+
+    <script>
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        const commandCards = document.querySelectorAll('.command-card');
+
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+
+            commandCards.forEach(card => {
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+                const title = card.querySelector('h2').textContent.toLowerCase();
+                const content = card.textContent.toLowerCase();
+
+                if (keywords.includes(searchTerm) ||
+                    title.includes(searchTerm) ||
+                    content.includes(searchTerm)) {
+                    card.classList.remove('hidden');
+
+                    // Highlight matching text
+                    if (searchTerm) {
+                        highlightText(card, searchTerm);
+                    } else {
+                        removeHighlight(card);
+                    }
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+
+            // If no search term, show all cards
+            if (!searchTerm) {
+                commandCards.forEach(card => {
+                    card.classList.remove('hidden');
+                    removeHighlight(card);
+                });
+            }
+        });
+
+        function highlightText(element, term) {
+            // Simple highlight - in production, use a more robust solution
+            const text = element.querySelector('p').textContent;
+            if (text.toLowerCase().includes(term)) {
+                const regex = new RegExp(`(${term})`, 'gi');
+                const newText = text.replace(regex, '<span class="highlight">$1</span>');
+                element.querySelector('p').innerHTML = newText;
+            }
+        }
+
+        function removeHighlight(element) {
+            const p = element.querySelector('p');
+            p.innerHTML = p.textContent;
+        }
+
+        // Click to expand (optional enhancement)
+        commandCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Could add modal or expand functionality here
+                console.log('Card clicked:', this.querySelector('h2').textContent);
+            });
+        });
+    </script>
+</body>
+</html>

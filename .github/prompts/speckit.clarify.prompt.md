@@ -18,12 +18,24 @@ Note: This clarification workflow is expected to run (and be completed) BEFORE i
 
 Execution steps:
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
-   - `FEATURE_DIR`
-   - `FEATURE_SPEC`
-   - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)
-   - If JSON parsing fails, abort and instruct user to re-run `/speckit.specify` or verify feature branch environment.
-   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Initialize Environment Context**:
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Run `gsc status` to get feature directory paths and current phase information
+   - Parse JSON output for `FEATURE_DIR`, `FEATURE_SPEC`, and optionally `IMPL_PLAN`, `TASKS`
+   - Use `gsc memory get constitution` to load constitutional guidance for clarification principles (read-only)
+
+   **Fallback Approach** (Legacy compatibility):
+   - If GSC is not available or command fails, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -PathsOnly` from repo root **once**
+   - Parse minimal JSON payload fields: `FEATURE_DIR`, `FEATURE_SPEC`, and optionally `IMPL_PLAN`, `TASKS`
+
+   **Common Path Resolution**:
+   - If JSON parsing fails, abort and instruct user to re-run `/speckit.specify` or verify feature branch environment
+   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot")
+   
+   **Before Writing Clarifications** (Step 6):
+   - Create checkpoint with timestamp: `gsc rollback checkpoint "clarify-write-$(Get-Date -Format 'yyyyMMdd-HHmmss')"` (if GSC available)
+   - This allows rollback if clarifications need to be revised
 
 2. Load the current spec file. Perform a structured ambiguity & coverage scan using this taxonomy. For each category, mark status: Clear / Partial / Missing. Produce an internal coverage map used for prioritization (do not output raw map unless no questions will be asked).
 

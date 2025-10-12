@@ -1,0 +1,2 @@
+This is a test file for rollback restoration testing.
+Original content - Version 1

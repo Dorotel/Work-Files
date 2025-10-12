@@ -1,0 +1,15 @@
+{
+  "description": "Testing with fixed repo root path",
+  "fileCount": 3,
+  "timestamp": "2025-10-10T14:00:08Z",
+  "feature": "none",
+  "phase": "none",
+  "id": "checkpoint-20251010-140008",
+  "stateSnapshot": null,
+  "modifiedFiles": [
+    ".github/prompts/implement-gsc-system.prompt.md",
+    ".specify/scripts/gsc.ps1",
+    ".specify/test-checkpoint.txt"
+  ],
+  "sizeBytes": 42370
+}

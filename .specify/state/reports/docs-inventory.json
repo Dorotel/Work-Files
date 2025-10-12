@@ -1,0 +1,502 @@
+{
+  "Timestamp": "2025-10-10T23:54:43.7027556-05:00",
+  "Required": [
+    {
+      "Name": "gsc-enhancement-system.md",
+      "LastModified": "2025-10-10T18:53:57.9145754-05:00",
+      "Size": 20507,
+      "Path": ".specify\\docs\\gsc-enhancement-system.md"
+    },
+    {
+      "Name": "gsc-implementation-plan.md",
+      "LastModified": "2025-10-10T18:53:57.9150751-05:00",
+      "Size": 48865,
+      "Path": ".specify\\docs\\gsc-implementation-plan.md"
+    },
+    {
+      "Name": "gsc-quickstart.md",
+      "LastModified": "2025-10-10T13:01:34.7176066-05:00",
+      "Size": 11969,
+      "Path": ".specify\\docs\\gsc-quickstart.md"
+    },
+    {
+      "Name": "gsc-interactive-help.html",
+      "LastModified": "2025-10-10T18:53:57.9150751-05:00",
+      "Size": 18324,
+      "Path": ".specify\\docs\\gsc-interactive-help.html"
+    },
+    {
+      "Name": "AGENTS.md",
+      "LastModified": "2025-10-10T18:53:57.9255789-05:00",
+      "Size": 25234,
+      "Path": "AGENTS.md"
+    },
+    {
+      "Name": "constitution.md",
+      "LastModified": "2025-10-10T18:53:57.9175747-05:00",
+      "Size": 19072,
+      "Path": ".specify\\memory\\constitution.md"
+    },
+    {
+      "Name": "lessons-learned.md",
+      "LastModified": "2025-10-10T18:53:57.9175747-05:00",
+      "Size": 7878,
+      "Path": ".specify\\memory\\lessons-learned.md"
+    }
+  ],
+  "Candidates": [
+    {
+      "Name": "gsc-deferred-tasks.md",
+      "LastModified": "2025-10-10T18:53:57.9139582-05:00",
+      "Size": 12374,
+      "Path": ".specify\\docs\\gsc-deferred-tasks.md"
+    },
+    {
+      "Name": "gsc-phase1-2-complete.md",
+      "LastModified": "2025-10-10T14:11:53.3031648-05:00",
+      "Size": 7698,
+      "Path": ".specify\\docs\\gsc-phase1-2-complete.md"
+    },
+    {
+      "Name": "gsc-phase1-2-validation.md",
+      "LastModified": "2025-10-10T14:11:53.2389971-05:00",
+      "Size": 8068,
+      "Path": ".specify\\docs\\gsc-phase1-2-validation.md"
+    },
+    {
+      "Name": "gsc-phase3-complete.md",
+      "LastModified": "2025-10-10T14:11:53.5554452-05:00",
+      "Size": 12056,
+      "Path": ".specify\\docs\\gsc-phase3-complete.md"
+    },
+    {
+      "Name": "gsc-phase3-validation.md",
+      "LastModified": "2025-10-10T14:11:53.4523644-05:00",
+      "Size": 11922,
+      "Path": ".specify\\docs\\gsc-phase3-validation.md"
+    },
+    {
+      "Name": "gsc-phase4-complete.md",
+      "LastModified": "2025-10-10T14:55:45.7233798-05:00",
+      "Size": 10219,
+      "Path": ".specify\\docs\\gsc-phase4-complete.md"
+    },
+    {
+      "Name": "gsc-phase4-validation.md",
+      "LastModified": "2025-10-10T14:55:45.6102581-05:00",
+      "Size": 15693,
+      "Path": ".specify\\docs\\gsc-phase4-validation.md"
+    },
+    {
+      "Name": "gsc-phase5-status-tracking.md",
+      "LastModified": "2025-10-10T15:35:46.3593285-05:00",
+      "Size": 15435,
+      "Path": ".specify\\docs\\gsc-phase5-status-tracking.md"
+    },
+    {
+      "Name": "gsc-phase6-workflow-orchestration.md",
+      "LastModified": "2025-10-10T15:46:47.6726006-05:00",
+      "Size": 17922,
+      "Path": ".specify\\docs\\gsc-phase6-workflow-orchestration.md"
+    },
+    {
+      "Name": "gsc-phases-1-6-audit.md",
+      "LastModified": "2025-10-10T18:53:57.9155746-05:00",
+      "Size": 32110,
+      "Path": ".specify\\docs\\gsc-phases-1-6-audit.md"
+    },
+    {
+      "Name": "gsc-phases-7-8-9-summary.md",
+      "LastModified": "2025-10-10T18:53:57.9155746-05:00",
+      "Size": 14991,
+      "Path": ".specify\\docs\\gsc-phases-7-8-9-summary.md"
+    },
+    {
+      "Name": "gsc-summary.md",
+      "LastModified": "2025-10-10T13:01:34.6255243-05:00",
+      "Size": 8433,
+      "Path": ".specify\\docs\\gsc-summary.md"
+    },
+    {
+      "Name": "phase-7-help-system-completion.md",
+      "LastModified": "2025-10-10T18:53:57.9160746-05:00",
+      "Size": 9394,
+      "Path": ".specify\\docs\\phase-7-help-system-completion.md"
+    },
+    {
+      "Name": "phase-8-documentation-polish-complete.md",
+      "LastModified": "2025-10-10T18:53:57.9160746-05:00",
+      "Size": 12320,
+      "Path": ".specify\\docs\\phase-8-documentation-polish-complete.md"
+    },
+    {
+      "Name": "phase-9-housekeeping-complete.md",
+      "LastModified": "2025-10-10T18:53:57.9165746-05:00",
+      "Size": 12255,
+      "Path": ".specify\\docs\\phase-9-housekeeping-complete.md"
+    },
+    {
+      "Name": "phase1-4-cleanup-summary.md",
+      "LastModified": "2025-10-10T14:55:45.795492-05:00",
+      "Size": 6335,
+      "Path": ".specify\\docs\\phase1-4-cleanup-summary.md"
+    },
+    {
+      "Name": "phase1-4-test-suite-results.md",
+      "LastModified": "2025-10-10T15:24:30.0903625-05:00",
+      "Size": 13221,
+      "Path": ".specify\\docs\\phase1-4-test-suite-results.md"
+    },
+    {
+      "Name": "phase6-completion-summary.md",
+      "LastModified": "2025-10-10T18:53:57.9165746-05:00",
+      "Size": 9275,
+      "Path": ".specify\\docs\\phase6-completion-summary.md"
+    },
+    {
+      "Name": "PHASE6-READY-TO-MERGE.md",
+      "LastModified": "2025-10-10T18:53:57.9139582-05:00",
+      "Size": 7881,
+      "Path": ".specify\\docs\\PHASE6-READY-TO-MERGE.md"
+    },
+    {
+      "Name": "phase6-validation-legacy-debt-report.md",
+      "LastModified": "2025-10-10T18:53:57.9165746-05:00",
+      "Size": 6024,
+      "Path": ".specify\\docs\\phase6-validation-legacy-debt-report.md"
+    },
+    {
+      "Name": "session-2025-10-10-audit-completion.md",
+      "LastModified": "2025-10-10T18:53:57.9170741-05:00",
+      "Size": 20305,
+      "Path": ".specify\\docs\\session-2025-10-10-audit-completion.md"
+    },
+    {
+      "Name": "ai-prompt-engineering-safety-review.prompt.md",
+      "LastModified": "2025-10-09T23:27:17.4272623-05:00",
+      "Size": 10370,
+      "Path": ".github\\prompts\\ai-prompt-engineering-safety-review.prompt.md"
+    },
+    {
+      "Name": "create-stored-procedure.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.6539366-05:00",
+      "Size": 14021,
+      "Path": ".github\\prompts\\create-stored-procedure.prompt.md"
+    },
+    {
+      "Name": "database-operation.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.654436-05:00",
+      "Size": 14639,
+      "Path": ".github\\prompts\\database-operation.prompt.md"
+    },
+    {
+      "Name": "debug-issue.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.654436-05:00",
+      "Size": 12402,
+      "Path": ".github\\prompts\\debug-issue.prompt.md"
+    },
+    {
+      "Name": "generate-docs.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.654436-05:00",
+      "Size": 11620,
+      "Path": ".github\\prompts\\generate-docs.prompt.md"
+    },
+    {
+      "Name": "github-copilot-starter.prompt.md",
+      "LastModified": "2025-10-09T23:27:17.4272623-05:00",
+      "Size": 14263,
+      "Path": ".github\\prompts\\github-copilot-starter.prompt.md"
+    },
+    {
+      "Name": "implement-gsc-system.prompt.md",
+      "LastModified": "2025-10-10T13:07:06.1895761-05:00",
+      "Size": 38529,
+      "Path": ".github\\prompts\\implement-gsc-system.prompt.md"
+    },
+    {
+      "Name": "memory-merger.prompt.md",
+      "LastModified": "2025-10-09T23:27:17.4272623-05:00",
+      "Size": 3976,
+      "Path": ".github\\prompts\\memory-merger.prompt.md"
+    },
+    {
+      "Name": "prompt-builder.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.654436-05:00",
+      "Size": 7296,
+      "Path": ".github\\prompts\\prompt-builder.prompt.md"
+    },
+    {
+      "Name": "refactor-code.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.6554381-05:00",
+      "Size": 12205,
+      "Path": ".github\\prompts\\refactor-code.prompt.md"
+    },
+    {
+      "Name": "reimagine.prompt.md",
+      "LastModified": "2025-10-10T23:14:51.3997653-05:00",
+      "Size": 154673,
+      "Path": ".github\\prompts\\reimagine.prompt.md"
+    },
+    {
+      "Name": "setup-custom-control.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.6559416-05:00",
+      "Size": 12081,
+      "Path": ".github\\prompts\\setup-custom-control.prompt.md"
+    },
+    {
+      "Name": "setup-service.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.6559416-05:00",
+      "Size": 12879,
+      "Path": ".github\\prompts\\setup-service.prompt.md"
+    },
+    {
+      "Name": "setup-view.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.656441-05:00",
+      "Size": 11709,
+      "Path": ".github\\prompts\\setup-view.prompt.md"
+    },
+    {
+      "Name": "setup-viewmodel.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.656441-05:00",
+      "Size": 6989,
+      "Path": ".github\\prompts\\setup-viewmodel.prompt.md"
+    },
+    {
+      "Name": "speckit.analyze.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9110677-05:00",
+      "Size": 8061,
+      "Path": ".github\\prompts\\speckit.analyze.prompt.md"
+    },
+    {
+      "Name": "speckit.checklist.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9115677-05:00",
+      "Size": 18064,
+      "Path": ".github\\prompts\\speckit.checklist.prompt.md"
+    },
+    {
+      "Name": "speckit.clarify.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9115677-05:00",
+      "Size": 10911,
+      "Path": ".github\\prompts\\speckit.clarify.prompt.md"
+    },
+    {
+      "Name": "speckit.constitution.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9120674-05:00",
+      "Size": 7624,
+      "Path": ".github\\prompts\\speckit.constitution.prompt.md"
+    },
+    {
+      "Name": "speckit.implement.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9125685-05:00",
+      "Size": 6252,
+      "Path": ".github\\prompts\\speckit.implement.prompt.md"
+    },
+    {
+      "Name": "speckit.plan.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9125685-05:00",
+      "Size": 3604,
+      "Path": ".github\\prompts\\speckit.plan.prompt.md"
+    },
+    {
+      "Name": "speckit.specify.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9125685-05:00",
+      "Size": 11394,
+      "Path": ".github\\prompts\\speckit.specify.prompt.md"
+    },
+    {
+      "Name": "speckit.tasks.prompt.md",
+      "LastModified": "2025-10-10T18:53:57.9135718-05:00",
+      "Size": 6558,
+      "Path": ".github\\prompts\\speckit.tasks.prompt.md"
+    },
+    {
+      "Name": "write-tests.prompt.md",
+      "LastModified": "2025-10-10T12:02:52.6569409-05:00",
+      "Size": 12516,
+      "Path": ".github\\prompts\\write-tests.prompt.md"
+    },
+    {
+      "Name": "agent-file-template.md",
+      "LastModified": "2025-10-09T23:11:27.7273469-05:00",
+      "Size": 454,
+      "Path": ".specify\\templates\\agent-file-template.md"
+    },
+    {
+      "Name": "checklist-template.md",
+      "LastModified": "2025-10-09T23:27:17.4322699-05:00",
+      "Size": 1352,
+      "Path": ".specify\\templates\\checklist-template.md"
+    },
+    {
+      "Name": "plan-template.md",
+      "LastModified": "2025-10-09T23:27:17.4327697-05:00",
+      "Size": 3763,
+      "Path": ".specify\\templates\\plan-template.md"
+    },
+    {
+      "Name": "spec-template.md",
+      "LastModified": "2025-10-09T23:27:17.4327697-05:00",
+      "Size": 4075,
+      "Path": ".specify\\templates\\spec-template.md"
+    },
+    {
+      "Name": "tasks-template.md",
+      "LastModified": "2025-10-09T23:27:17.4332693-05:00",
+      "Size": 9424,
+      "Path": ".specify\\templates\\tasks-template.md"
+    }
+  ],
+  "Checkpoints": [
+    {
+      "Name": "checkpoint-20251010-133938",
+      "LastModified": "2025-10-10T13:39:38.7855006-05:00",
+      "Size": 290.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-133938"
+    },
+    {
+      "Name": "checkpoint-20251010-134013",
+      "LastModified": "2025-10-10T13:40:13.0295833-05:00",
+      "Size": 279.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-134013"
+    },
+    {
+      "Name": "checkpoint-20251010-135928",
+      "LastModified": "2025-10-10T13:59:28.7034959-05:00",
+      "Size": 280.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-135928"
+    },
+    {
+      "Name": "checkpoint-20251010-135947",
+      "LastModified": "2025-10-10T13:59:47.8393036-05:00",
+      "Size": 246.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-135947"
+    },
+    {
+      "Name": "checkpoint-20251010-140008",
+      "LastModified": "2025-10-10T14:00:08.5221324-05:00",
+      "Size": 42771.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-140008"
+    },
+    {
+      "Name": "checkpoint-20251010-142833",
+      "LastModified": "2025-10-10T14:28:33.8124713-05:00",
+      "Size": 42817.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-142833"
+    },
+    {
+      "Name": "checkpoint-20251010-152134",
+      "LastModified": "2025-10-10T15:21:34.8688004-05:00",
+      "Size": 42773.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-152134"
+    },
+    {
+      "Name": "checkpoint-20251010-152725",
+      "LastModified": "2025-10-10T15:27:25.9597282-05:00",
+      "Size": 733.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-152725"
+    },
+    {
+      "Name": "checkpoint-20251010-153444",
+      "LastModified": "2025-10-10T15:34:44.5739189-05:00",
+      "Size": 16229.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-153444"
+    },
+    {
+      "Name": "checkpoint-20251010-153856",
+      "LastModified": "2025-10-10T18:53:57.920075-05:00",
+      "Size": 766.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-153856"
+    },
+    {
+      "Name": "checkpoint-20251010-154243",
+      "LastModified": "2025-10-10T18:53:57.9210747-05:00",
+      "Size": 19304.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-154243"
+    },
+    {
+      "Name": "checkpoint-20251010-154701",
+      "LastModified": "2025-10-10T18:53:57.9210747-05:00",
+      "Size": 737.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-154701"
+    },
+    {
+      "Name": "checkpoint-20251010-154752",
+      "LastModified": "2025-10-10T18:53:57.9215743-05:00",
+      "Size": 746.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-154752"
+    },
+    {
+      "Name": "checkpoint-20251010-155114",
+      "LastModified": "2025-10-10T18:53:57.9215743-05:00",
+      "Size": 632.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-155114"
+    },
+    {
+      "Name": "checkpoint-20251010-155120",
+      "LastModified": "2025-10-10T18:53:57.9215743-05:00",
+      "Size": 613.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-155120"
+    },
+    {
+      "Name": "checkpoint-20251010-155125",
+      "LastModified": "2025-10-10T18:53:57.9220743-05:00",
+      "Size": 610.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-155125"
+    },
+    {
+      "Name": "checkpoint-20251010-161708",
+      "LastModified": "2025-10-10T18:53:57.9225742-05:00",
+      "Size": 32993.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-161708"
+    },
+    {
+      "Name": "checkpoint-20251010-163551",
+      "LastModified": "2025-10-10T18:53:57.9240759-05:00",
+      "Size": 33414.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-163551"
+    },
+    {
+      "Name": "checkpoint-20251010-171450",
+      "LastModified": "2025-10-10T18:53:57.9240759-05:00",
+      "Size": 837.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-171450"
+    },
+    {
+      "Name": "checkpoint-20251010-171940",
+      "LastModified": "2025-10-10T18:53:57.9245797-05:00",
+      "Size": 818.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-171940"
+    },
+    {
+      "Name": "checkpoint-20251010-173805",
+      "LastModified": "2025-10-10T18:53:57.9245797-05:00",
+      "Size": 846.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-173805"
+    },
+    {
+      "Name": "checkpoint-20251010-234003",
+      "LastModified": "2025-10-10T23:40:03.9077177-05:00",
+      "Size": 155946.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-234003"
+    },
+    {
+      "Name": "checkpoint-20251010-234208",
+      "LastModified": "2025-10-10T23:42:08.0550788-05:00",
+      "Size": 155714.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-234208"
+    },
+    {
+      "Name": "checkpoint-20251010-235232",
+      "LastModified": "2025-10-10T23:52:32.1307767-05:00",
+      "Size": 155663.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-235232"
+    },
+    {
+      "Name": "checkpoint-20251010-235342",
+      "LastModified": "2025-10-10T23:53:42.5650357-05:00",
+      "Size": 155663.0,
+      "Path": ".specify\\state\\checkpoints\\checkpoint-20251010-235342"
+    }
+  ],
+  "TotalSize": 1719204.0
+}

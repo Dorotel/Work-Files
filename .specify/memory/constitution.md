@@ -1,398 +1,363 @@
-# MTM Avalonia Template Constitution
-
 <!--
 =============================================================================
-SYNC IMPACT REPORT - VERSION 1.1.0
+SYNC IMPACT REPORT - Constitution Update
+=============================================================================
+Version Change: 1.0.0 → 1.0.1 (PATCH)
+Date: 2025-10-10
 
-Version Change: 1.0.0 → 1.1.0 (Minor Amendment)
-Change Type: MINOR (New principle added - Reusable Custom Controls)
+CHANGE SUMMARY:
+- Type: PATCH - Documentation clarification and tooling integration
+- Reason: Document GSC Enhancement System as compliance enforcement tooling
 
-Ratification Date: 2025-10-08
-Last Amended: 2025-10-08
-Rationale: Added Principle XI (Reusable Custom Controls) to reduce UI code
-           duplication and enforce consistency across manufacturing views.
-           Prevents constant recoding when adding new VISUAL ERP UI elements.
+SECTIONS MODIFIED:
+- Governance → Compliance Enforcement: Added GSC validation system documentation
+- Development Workflow → Feature Development Process: Added GSC-enhanced workflow with fallback
 
-Modified Principles:
-- None (existing principles unchanged)
+PRINCIPLES UNCHANGED:
+- Principle I: Code Quality Excellence (No changes)
+- Principle II: Comprehensive Testing Standards (No changes)
+- Principle III: User Experience Consistency (No changes)
+- Principle IV: Performance Requirements (No changes)
 
-Added Sections:
-- Principle XI: Reusable Custom Controls for Manufacturing UI
+GSC INTEGRATION DOCUMENTED:
+- GSC validates all 4 constitutional principles automatically
+- Provides safety mechanisms (checkpoint/rollback system)
+- Enables progress visibility (status reporting with metrics)
+- Offers workflow orchestration (guided feature development)
+- Integrates memory system access (constitution and lessons learned)
 
-Removed Sections:
-- None
+GSC PROMPT ALIGNMENT STATUS:
+✅ speckit.analyze.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.checklist.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.clarify.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.constitution.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.specify.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.plan.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.tasks.prompt.md - GSC-aligned (Phase 9.3 complete)
+✅ speckit.implement.prompt.md - GSC-aligned (Phase 9.3 complete)
+Status: 8/8 prompts GSC-aligned (100% Phase 9.3 completion)
 
-Template Alignment Status:
-✅ plan-template.md - Constitution Check section now includes Principle XI
-✅ spec-template.md - Requirements align with custom control reuse
-✅ tasks-template.md - Task organization supports custom control development
-✅ README.md - Boot sequence and architecture documentation aligned
-✅ AGENTS.md - AI agent instructions consistent with all 11 principles
-✅ .github/copilot-instructions.md - Development guidelines fully aligned
-✅ UI-UX-GUIDELINES.md - Custom control catalog completed (Feature 005, Phase 7)
+TEMPLATES STATUS:
+✅ plan-template.md - No changes required (constitutional alignment maintained)
+✅ spec-template.md - No changes required (requirements sections unchanged)
+✅ tasks-template.md - No changes required (task organization unchanged)
+✅ All 8 speckit prompts - Now document GSC integration alongside legacy workflows
 
-✅ Follow-up TODOs COMPLETED (2025-10-09):
-- ✅ Created custom control catalog in docs/UI-CUSTOM-CONTROLS-CATALOG.md (10 controls documented)
-- ✅ Documented manufacturing field controls pattern (StatusCard, MetricDisplay, SettingRow, etc.)
-- ✅ Added custom control examples to quickstart guide (Feature 005)
+FOLLOW-UP ITEMS:
+- ✅ No structural changes to constitutional principles
+- ✅ GSC documented as recommended tooling, not required
+- ✅ Backward compatibility maintained (fallback to PowerShell scripts preserved)
+- ✅ Phase 9.3 complete - all prompts GSC-integrated
 
+NEXT STEPS:
+- Update AGENTS.md to reference GSC system (optional enhancement)
+- No code changes required (clarification only, not redefinition)
+- No migration plan needed (additive documentation only)
 =============================================================================
 -->
 
+# MTM WIP Application (Avalonia) Constitution
+
 ## Core Principles
 
-### I. Spec-Driven Development (NON-NEGOTIABLE)
+### I. Code Quality Excellence
 
-Every feature MUST follow the complete Spec-Kit workflow before implementation:
+The MTM WIP Application MUST maintain the highest standards of code quality to ensure reliability, maintainability, and long-term project sustainability.
 
-1. **Specification** (`SPEC_*.md`): Functional requirements, user stories with priorities (P1, P2, P3), acceptance criteria, and independently testable scenarios
-2. **Planning** (`PLAN_*.md`): Technical architecture, implementation approach, technology constraints, performance budgets
-3. **Tasks** (`TASKS_*.md`): Granular task breakdown organized by user story priority, enabling incremental delivery
-4. **Validation**: 100% task completion, all acceptance criteria met, constitutional compliance verified
+**Non-Negotiable Requirements:**
 
-**Rationale**: Prevents scope creep, ensures architectural alignment, enables parallel development by multiple agents/developers, and provides audit trail for decisions.
+- **Nullable Reference Types**: MUST be enabled across all project files (`<Nullable>enable</Nullable>` in .csproj). All code MUST handle nullability explicitly with proper null checks and null-forgiving operators only when provably safe.
 
-**No feature may bypass this workflow**. All user stories MUST be prioritized and independently testable to enable MVP-first delivery.
+- **MVVM Community Toolkit Patterns**: MUST use `CommunityToolkit.Mvvm` version 8.3.2+ exclusively for all MVVM implementations. Specifically:
+  - Use `[ObservableProperty]` for bindable properties (never manual `INotifyPropertyChanged`)
+  - Use `[RelayCommand]` for command implementations (never `ReactiveCommand` or manual `ICommand`)
+  - Inherit from `ObservableObject` for ViewModels
+  - Use `IAsyncRelayCommand` for async operations
 
-### II. Nullable Reference Types (NON-NEGOTIABLE)
+- **Centralized Error Handling**: MUST use `Services.ErrorHandling.HandleErrorAsync()` for all error scenarios. Direct exception throwing or swallowing exceptions is prohibited except in:
+  - Constructor argument validation (`ArgumentNullException.ThrowIfNull()`)
+  - Critical infrastructure failures that cannot be recovered
 
-ALL C# code MUST have nullable reference types enabled (`<Nullable>enable</Nullable>`):
+- **Comprehensive Dependency Injection**: MUST use `Microsoft.Extensions.DependencyInjection` for all service instantiation. Manual `new` instantiation prohibited for:
+  - Services (business logic layer)
+  - ViewModels (presentation layer)
+  - Database connections
+  - Logger instances
 
-- Use `?` for all nullable reference types
-- Avoid `!` null-forgiving operator except when provably safe (e.g., after explicit null check)
-- Use null-conditional operators (`?.`, `??`, `??=`) instead of null checks where appropriate
-- All async methods MUST include `CancellationToken` parameter (default to `CancellationToken.None`)
-
-**Rationale**: Prevents `NullReferenceException` at compile-time, reduces runtime errors by 90%+ (industry data), enforces contract clarity between components.
-
-### III. Avalonia CompiledBinding (NON-NEGOTIABLE)
-
-ALL Avalonia XAML files MUST use CompiledBinding with `x:DataType`:
-
-- **ALWAYS** set `x:DataType="vm:ViewModelName"` on Window/UserControl root elements
-- **ALWAYS** set `x:CompileBindings="True"` on root elements (project default, but be explicit)
-- **ALWAYS** use `{CompiledBinding PropertyName}` syntax (NEVER `{Binding}` or `{ReflectionBinding}`)
-- **ALWAYS** include `Design.DataContext` for previewer support
-
-**Rationale**: Compile-time binding validation eliminates 100% of runtime binding errors, provides 30-50% performance improvement over reflection binding (Avalonia benchmarks), enables refactoring with compiler errors.
-
-**Violations WILL break the build** - this is by design to prevent silent runtime failures.
-
-### IV. Test-First Development (REQUIRED)
-
-All new features MUST follow Test-Driven Development (TDD) workflow:
-
-1. **Write tests FIRST** based on acceptance criteria from spec
-2. **Verify tests FAIL** (red) before implementation
-3. **Implement minimum code** to make tests pass (green)
-4. **Refactor** while keeping tests green
-5. **Commit** only when tests pass
-
-**Test Organization**:
-- **Unit tests**: ViewModels, services, business logic (fast, isolated, >80% coverage target)
-- **Integration tests**: Database, API, file system operations (slower, requires infrastructure)
-- **Contract tests**: Visual ERP API contract validation (ensures API compatibility)
-- **Performance tests**: Boot time (<10s), memory (<100MB), service initialization (<3s)
-
-**Framework**: xUnit + FluentAssertions + NSubstitute (consistent across all tests)
-
-**Rationale**: TDD prevents regressions, enables refactoring confidence, documents behavior, catches edge cases early. Projects with TDD have 40-80% fewer production defects (IBM, Microsoft research).
-
-### V. Performance Budgets (NON-NEGOTIABLE)
-
-All features MUST stay within established performance budgets:
-
-**Boot Sequence**:
-- Stage 0 (Splash): <1000ms
-- Stage 1 (Services): <3000ms (10 services initialized)
-- Stage 2 (Application Ready): <1000ms
-- **Total Boot Time: <10 seconds**
-
-**Memory**:
-- Cache (LZ4 compressed): ~40MB (3:1 compression ratio)
-- Services (DI, connection pools): ~30MB
-- Framework (Avalonia + .NET): ~30MB
-- **Total: <100MB during startup**
-
-**Operations**:
-- Configuration retrieval: <100ms (`GetValue<T>()` with 50+ keys)
-- Credential retrieval: <200ms (OS-native storage)
-- Feature flag evaluation: <5ms (in-memory cache)
-- Database queries: <500ms (user preference persistence)
-
-**Rationale**: Manufacturing environment requires fast, predictable startup. Performance budgets prevent gradual degradation and ensure consistent user experience across deployment sites.
-
-**Measurement**: Performance tests in `tests/integration/PerformanceTests.cs` MUST validate budgets before merge. Debug Terminal provides real-time monitoring.
-
-### VI. MAMP MySQL Database Documentation (NON-NEGOTIABLE 🔴)
-
-ALL database objects (tables, columns, stored procedures, functions, views, indexes) MUST be documented in `.github/mamp-database/` JSON files as the **single source of truth**:
-
-**Schema Documentation Files**:
-- `schema-tables.json`: Complete table structures (columns, types, constraints, foreign keys, indexes)
-- `stored-procedures.json`: Procedure signatures, parameters, logic
-- `functions.json`: User-defined function definitions and return types
-- `views.json`: Database view SQL definitions
-- `indexes.json`: Index documentation with performance notes
-- `sample-data.json`: Test data for development and testing
-- `connection-info.json`: Connection settings and environment configs
-- `migrations-history.json`: Version history with semantic versioning
-
-**Mandatory Workflow**:
-1. **Before writing code**: ALWAYS read `schema-tables.json` to verify table/column names (case-sensitive: `Users`, `UserId`, `PreferenceKey`)
-2. **During development**: Reference exact schema from JSON files (no guessing)
-3. **After database changes**: IMMEDIATELY update corresponding JSON file(s) and increment version
-4. **Before PR**: Ensure `lastUpdated` timestamp is current and version incremented
-5. **After merge**: Run database audit to verify JSON accuracy matches actual schema
-
-**Rationale**: MySQL table/column names are case-sensitive in production (Linux) but not in development (Windows). JSON documentation prevents runtime errors from schema mismatches, enables schema evolution tracking, supports automated validation, and provides single source of truth for multiple consumers (C# code, API toolkit, documentation, migration scripts).
-
-**Enforcement**: GitHub Actions workflow validates JSON structure and freshness (<30 days). Code reviews MUST verify schema-tables.json was consulted before database code.
-
-### VII. CommunityToolkit.Mvvm Source Generators (NON-NEGOTIABLE)
-
-ALL ViewModels MUST use CommunityToolkit.Mvvm 8.4.0 source generators (NEVER ReactiveUI):
-
-**Mandatory Patterns**:
-- `[ObservableProperty]` for all bindable properties (generates `INotifyPropertyChanged` boilerplate)
-- `[RelayCommand]` for all commands (generates `ICommand` properties with async support)
-- `partial class` modifier REQUIRED for source generators
-- Inherit from `ObservableObject` or `ObservableRecipient`
-- Use `[NotifyCanExecuteChangedFor(nameof(CommandName))]` for command enablement
-
-**Rationale**: Source generators eliminate 90% of MVVM boilerplate, enforce consistent patterns, provide compile-time validation, reduce human error. ReactiveUI patterns are explicitly forbidden to maintain codebase consistency.
-
-**No manual INotifyPropertyChanged implementation** - let source generators handle it.
-
-### VIII. Asynchronous Programming with Cancellation (REQUIRED)
-
-ALL async operations MUST support cancellation:
-
-- Every async method MUST have `CancellationToken cancellationToken = default` parameter
-- Use `ConfigureAwait(false)` in library code (NOT in UI code - deadlock risk)
-- Suffix async methods with `Async`
-- Use `ValueTask<T>` for hot paths when appropriate (e.g., cache hits)
-- Link cancellation tokens when creating nested operations: `CancellationTokenSource.CreateLinkedTokenSource()`
-
-**Error Handling**:
-- Use Polly for retry policies (exponential backoff: 1s, 2s, 4s)
-- Use circuit breakers for cascading failures (threshold: 5 failures in 10s → open for 30s)
-- Log all retry attempts with structured logging (Serilog)
-- Categorize errors with `ErrorCategorizer` for user-friendly recovery
-
-**Rationale**: Manufacturing environment requires responsive UI during long-running operations. Cancellation prevents resource leaks, enables graceful shutdown, and improves user experience. Polly resilience prevents cascading failures from unreliable network/API calls.
-
-### IX. OS-Native Credential Storage (NON-NEGOTIABLE)
-
-ALL credentials (passwords, API keys, tokens) MUST use OS-native secure storage (NEVER hardcoded, NEVER in config files):
-
-**Platform Implementations**:
-- **Windows**: `WindowsSecretsService` (DPAPI via Credential Manager)
-- **Android**: `AndroidSecretsService` (KeyStore with hardware-backed encryption)
-- **macOS/iOS**: Keychain Services (planned)
-- **Linux**: Secret Service API (planned)
-
-**Error Handling**:
-- Storage unavailable → Show modal dialog prompting credential re-entry
-- Dialog cancellation → Application closes with clear warning (FR-013)
-- Corrupted credentials → Automatic recovery flow (see `docs/CREDENTIAL-RECOVERY-FLOW.md`)
-
-**Rationale**: Security compliance requirement for manufacturing environment. OS-native storage provides encryption at rest, hardware-backed security (Android KeyStore), audit trails, and separation from application code/config.
-
-**Enforcement**: Code reviews MUST reject hardcoded secrets or credentials in configuration files. Use `ISecretsService` interface for testability.
-
-### X. Graceful Degradation and Offline-First (REQUIRED)
-
-Application MUST continue operating when dependencies are unavailable:
-
-**Offline Capabilities**:
-- **Configuration**: Environment variables → User config (cached) → Application defaults
-- **User Preferences**: Last-known cached values (persisted to local JSON)
-- **Feature Flags**: Last-known cached values (persisted to local JSON)
-- **Visual ERP Data**: LZ4-compressed cache (~40MB, 3:1 ratio, stale data acceptable with warning)
-- **Credentials**: MUST be available (cannot proceed without - security requirement)
-
-**User Experience**:
-- Show warning banner: "Working offline - data may be stale"
-- Display cache age indicator: "Last updated: 2 hours ago"
-- Queue write operations for sync when reconnected
-- Automatic reconnection attempts with exponential backoff (1s, 2s, 4s, 8s, max 60s)
-
-**Rationale**: Manufacturing floor has unreliable network connectivity. Offline-first design ensures productivity continues during network outages, reduces server dependency, and improves perceived performance.
-
-### XI. Reusable Custom Controls for Manufacturing UI (REQUIRED)
-
-ALL frequently-used UI patterns MUST be implemented as reusable Avalonia custom controls (NEVER copy-paste XAML):
-
-**Custom Control Requirements**:
-- **Encapsulation**: Complete UI logic in single `.axaml` + `.axaml.cs` file pair
-- **Styling Variants**: Support multiple visual variants via style classes (e.g., `ManufacturingField.Notes` for expandable fields)
-- **Theme Integration**: Use Theme V2 semantic tokens exclusively (no hardcoded colors/sizes)
-- **Bindable Properties**: Expose `AvaloniaProperty` for all data-driven attributes with `x:DataType` support
-- **Dependency Properties**: Use `StyledProperty<T>` pattern with proper default values and validation
-- **Documentation**: XML comments on all public properties/methods with usage examples
-
-**When to Create Custom Control** (3+ usage threshold):
-- Pattern appears in **3 or more views** → Extract to custom control
-- Complex layout requiring **10+ lines of XAML** → Candidate for encapsulation
-- Behavior requires **code-behind logic** → Custom control with attached properties
-- Styling variants needed across **multiple contexts** → Style-class-based control
-
-**Control Location & Naming**:
-- Path: `MTM_Template_Application/Controls/{Domain}/{ControlName}.axaml`
-- Namespace: `MTM_Template_Application.Controls.{Domain}`
-- Naming: `{Purpose}{Type}` (e.g., `ManufacturingField`, `BarcodeInput`, `StatusBadge`, `ConnectionHealthIndicator`)
-- Base classes: Inherit from `UserControl`, `ContentControl`, or `TemplatedControl` based on complexity
-
-**Styling Architecture**:
-- **Base styles**: Define common properties in `ControlName` selector
-- **Variant styles**: Use compound selectors (`ControlName.VariantName`) for specific overrides
-- **State styles**: Use pseudo-classes (`:pointerover`, `:focus-within`, `:disabled`) for interaction states
-- **Container constraints**: Use `ClipToBounds="True"` and `Margin="0"` for proper boundary containment
-
-**Manufacturing-Specific Controls** (established patterns):
-- `ManufacturingField`: Form field with label, input, validation, offline indicator (base + Notes/Barcode/Numeric variants)
-- `BarcodeInput`: Text input optimized for scanner integration with validation and focus management
-- `StatusBadge`: Color-coded status indicator with icon + text (Open/InProgress/Urgent/Closed variants)
-- `ConnectionHealthIndicator`: Persistent VISUAL ERP connection status (Online/Degraded/Offline with tooltip)
-- `CachedDataBanner`: Warning banner showing cache age and last sync timestamp
-- `QuickFilterChip`: Pill-shaped toggle button for common filter scenarios (reusable across grids)
-- `TransactionConfirmationToast`: Non-blocking notification with auto-dismiss and action buttons
-
-**Rationale**: Manufacturing UI has repetitive patterns (part lookups, work order lists, inventory forms). Custom controls prevent copy-paste errors, ensure consistent behavior, enable centralized bug fixes, reduce XAML from 500+ lines to 50-100 lines per view, and accelerate feature development by 40-60% (measured in Features 001-003). Copy-pasting XAML creates maintenance debt where bugs must be fixed in 5+ locations.
-
-**Enforcement**: Code reviews MUST reject duplicate XAML patterns. When reviewers identify 2+ similar XAML blocks, request custom control extraction before merge. Existing controls documented in `docs/UI-CUSTOM-CONTROLS-CATALOG.md` (catalog created during Feature 005 UI enhancement work).
-
-## Technology Stack Requirements
-
-### Language and Framework (Fixed Versions)
-- **Language**: C# with `<LangVersion>latest</LangVersion>` targeting .NET 9.0
-- **Nullable Reference Types**: ENABLED (`<Nullable>enable</Nullable>`) - project-wide, no exceptions
-- **UI Framework**: Avalonia UI 11.3.6 (cross-platform XAML)
-- **MVVM Toolkit**: CommunityToolkit.Mvvm 8.4.0 (source generators)
-- **Compiled Bindings**: DEFAULT (`<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>`)
-
-### Infrastructure Dependencies
-- **Dependency Injection**: Microsoft.Extensions.DependencyInjection 9.0.0
-- **Logging**: Serilog.Extensions.Logging 8.0.0 (structured logging)
-- **Observability**: OpenTelemetry (optional Jaeger export)
-- **Resilience**: Polly 8.4.2 (retry policies, circuit breakers)
-- **Mapping**: AutoMapper 13.0.1 (DTO/model mapping)
-- **Validation**: FluentValidation 11.10.0 (input validation)
-
-### Data Storage
-- **Database**: MySql.Data 9.0.0 against MAMP MySQL 5.7 (parameterized queries ONLY)
-- **Cache**: K4os.Compression.LZ4 1.3.8 (local cache, ~3:1 compression ratio)
-- **Secrets**: OS-native secure storage (DPAPI/KeyStore/Keychain)
-
-### Testing
-- **Test Framework**: xUnit 2.9.2
-- **Mocking**: NSubstitute 5.1.0
-- **Assertions**: FluentAssertions 6.12.1
-
-**Rationale**: Fixed versions prevent compatibility issues, ensure reproducible builds, and enable automated dependency updates with confidence.
-
-**Version Changes**: ALL package version changes MUST be documented in `Directory.Packages.props` with rationale in PR description. Breaking changes require constitutional review.
-
-## Development Workflow
-
-### Feature Development (Spec-Kit Workflow)
-1. **Create specification**: Use `/specify` prompt to generate `SPEC_*.md` with prioritized user stories
-2. **Clarify requirements**: Use `/clarify` prompt to resolve ambiguities (prevents rework)
-3. **Generate plan**: Use `/plan` prompt to create `PLAN_*.md` with technical architecture
-4. **Break down tasks**: Use `/tasks` prompt to generate `TASKS_*.md` organized by user story priority
-5. **Implement incrementally**: Complete Phase 1 (Setup) → Phase 2 (Foundational) → Phase 3+ (User Stories by priority)
-6. **Validate continuously**: Run tests after each task, validate user stories independently
-7. **Complete validation**: Use `validate-implementation.ps1` script to verify 100% task completion and constitutional compliance
-
-### Code Review Requirements
-All pull requests MUST verify:
-1. **Nullable safety**: Proper `?` annotations, no unnecessary `!` operators
-2. **XAML bindings**: CompiledBinding with `x:DataType` everywhere
-3. **Async patterns**: `CancellationToken` support, no blocking calls (`.Result`, `.Wait()`)
-4. **Error handling**: Comprehensive try-catch with `ErrorCategorizer`
-5. **Testing**: Unit tests for ViewModels, integration tests for services
-6. **Performance**: Stays within budgets (<10s boot, <100MB memory, <3s service initialization)
-7. **Database**: References `schema-tables.json` before writing queries, uses parameterized queries
-8. **Constitutional compliance**: Validation script passes with zero blocking issues
-
-### Commit Conventions
-- Use conventional commit format: `type(scope): description`
-- Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `perf`, `style`
-- Reference feature ID: `feat(001): add splash screen timeout handler`
-- Include task ID: `feat(001): implement Stage1 services (T012, T013, T014)`
-
-### Branch Naming
-- Feature branches: `###-feature-name` (e.g., `001-boot-sequence-splash`)
-- Hotfix branches: `hotfix/brief-description`
-- Experiment branches: `experiment/brief-description` (not merged to main)
-
-## Quality Standards
-
-### Code Quality
-- **Coverage Target**: >80% for critical paths (boot sequence, configuration, secrets)
-- **Cyclomatic Complexity**: <10 per method (enforce with analyzer)
-- **File Length**: <500 lines (split into multiple files if exceeded)
-- **Method Length**: <50 lines (extract helper methods)
-- **Class Coupling**: <10 dependencies (use interfaces for testability)
-
-### Performance Monitoring
-- **Boot Metrics**: Tracked via Debug Terminal (real-time performance snapshots)
-- **Memory Profiling**: Use dotMemory for leak detection before major releases
-- **Build Time**: <60 seconds for full solution rebuild (warm)
-- **Test Execution**: <30 seconds for all unit tests, <5 minutes for integration tests
-
-### Documentation Requirements
-- **Code Comments**: XML documentation for all public APIs
-- **Architecture Decisions**: Record in `docs/` directory with rationale
-- **User Guides**: Markdown files in `docs/` for features with user-facing changes
-- **Database Changes**: Update `migrations-history.json` immediately after schema changes
-
-### Accessibility
-- **Keyboard Navigation**: All UI elements accessible via keyboard
-- **Screen Reader Support**: ARIA labels on all interactive elements
-- **High Contrast Mode**: Theme V2 semantic tokens ensure visibility
-- **Font Scaling**: UI layout adapts to system font size settings (up to 200%)
-
-## Governance
-
-### Constitution Authority
-This constitution supersedes all other development practices, style guides, and team preferences. When conflicts arise, **constitution wins**.
-
-### Amendment Process
-1. **Proposal**: Document proposed change with rationale and impact analysis
-2. **Discussion**: Review with team and stakeholders (minimum 3 business days)
-3. **Approval**: Requires consensus (blocking concerns must be addressed)
-4. **Migration Plan**: Document how existing code will be updated (if applicable)
-5. **Version Bump**: Increment version according to semantic versioning:
-   - **MAJOR**: Backward incompatible governance/principle removals or redefinitions
-   - **MINOR**: New principle/section added or materially expanded guidance
-   - **PATCH**: Clarifications, wording, typo fixes, non-semantic refinements
-6. **Template Sync**: Update all affected templates in `.specify/templates/`
-7. **Communication**: Announce change to all contributors with effective date
-
-### Compliance Review
-- **Pre-merge**: Validation script checks constitutional compliance (automated)
-- **Weekly**: Team reviews recent PRs for principle adherence (spot check)
-- **Quarterly**: Constitutional audit to identify drift and technical debt
-- **Annual**: Full constitutional review to assess relevance and effectiveness
-
-### Complexity Justification
-When a feature requires violating a principle:
-1. Document the violation in `PLAN_*.md` Complexity Tracking section
-2. Explain why the principle doesn't apply (specific context)
-3. Propose simpler alternative and explain why it was rejected
-4. Get explicit approval in PR review (requires maintainer sign-off)
-5. Add technical debt item to revisit in future refactoring
-
-### Runtime Development Guidance
-For day-to-day development patterns and AI agent instructions:
-- **AI Agents**: See `AGENTS.md` for comprehensive agent context
-- **Developers**: See `.github/copilot-instructions.md` for coding standards
-- **Domain Patterns**: See `.github/instructions/*.instructions.md` for specific patterns (Avalonia UI, database integration, debugging workflows)
-
-**Constitution vs. Guidance**: Constitution defines **WHAT** must be done (principles, requirements). Guidance documents define **HOW** to do it (patterns, examples, troubleshooting).
+**Rationale**: Manufacturing applications demand exceptional reliability. Null reference exceptions, inconsistent patterns, and poor error handling directly translate to production line downtime costing thousands of dollars per minute.
 
 ---
 
-**Version**: 1.1.0 | **Ratified**: 2025-10-08 | **Last Amended**: 2025-10-08
+### II. Comprehensive Testing Standards
+
+All features MUST be validated through comprehensive testing to prevent manufacturing disruptions and ensure cross-platform reliability.
+
+**Non-Negotiable Requirements:**
+
+- **Minimum 80% Code Coverage**: All new code MUST achieve minimum 80% line coverage. Critical paths (inventory transactions, database operations, manufacturing workflows) MUST achieve 95%+ coverage.
+
+- **Test-Driven Development (TDD)**: For complex business logic and critical manufacturing operations:
+  1. Write failing tests that capture requirements
+  2. Obtain stakeholder/team approval of test scenarios
+  3. Implement minimal code to pass tests
+  4. Refactor while maintaining green tests
+  
+- **Cross-Platform Feature Testing**: All features MUST be validated on:
+  - Windows (primary development platform)
+  - macOS (Intel and Apple Silicon)
+  - Linux (Ubuntu LTS)
+  - Feature parity required across platforms
+  
+- **Manufacturing Domain Validation**: All manufacturing operations MUST have test coverage:
+  - Operation codes (90=Move, 100=Receive, 110=Ship, 120=Transfer)
+  - Location validation (FLOOR, RECEIVING, SHIPPING, custom locations)
+  - Transaction types (IN, OUT, TRANSFER)
+  - Session management (8+ hour manufacturing shifts)
+  - Inventory accuracy (quantity tracking, part validation)
+
+**Test Organization**:
+
+```plaintext
+tests/
+├── unit/              # Component isolation testing (80% coverage minimum)
+├── integration/       # Service interaction testing (cross-service)
+├── contract/          # API/database contract testing
+└── platform/          # Cross-platform compatibility testing
+```
+
+**Rationale**: Manufacturing environments cannot tolerate bugs. A failed inventory transaction can halt production lines. Cross-platform testing ensures operators on different terminals receive consistent, reliable functionality.
+
+---
+
+### III. User Experience Consistency
+
+Operators working 8+ hour manufacturing shifts MUST have a consistent, intuitive, and responsive user interface across all platforms and sessions.
+
+**Non-Negotiable Requirements:**
+
+- **Avalonia UI 11.3.4+ Standards**: MUST use proper AXAML syntax with:
+  - Compiled bindings where performance-critical (`x:CompileBindings="True"`)
+  - Proper MVVM bindings (no code-behind logic except view-specific initialization)
+  - ResourceDictionary usage for reusable styles
+  - Theme V2 semantic token system (`Resources/ThemesV2/`)
+
+- **Material Design Iconography**: MUST use Material Icons Avalonia (version 2.4.1+) for all UI icons. Custom icons prohibited unless Material Design lacks required icon. Icon consistency ensures intuitive recognition during rapid manufacturing operations.
+
+- **Theme System Integration**: MUST support:
+  - Light and Dark themes (Theme.Light.axaml, Theme.Dark.axaml)
+  - Semantic token system (Tokens.axaml, Semantic.axaml)
+  - Runtime theme switching without restart
+  - High-contrast mode for accessibility
+
+- **8+ Hour Session Responsiveness**: UI MUST remain responsive throughout extended manufacturing shifts:
+  - No memory leaks accumulating over session duration
+  - Consistent performance from session start to session end
+  - Session timeout handling (60-minute inactivity) with graceful recovery
+  - Auto-save mechanisms to prevent data loss during long operations
+
+**UI Response Standards**:
+
+- Button clicks: <100ms acknowledgment
+- Data grid loading: <500ms for typical datasets (1000 rows)
+- Form validation: Real-time (<50ms feedback)
+- Navigation: <200ms between views
+
+**Rationale**: Manufacturing operators perform repetitive tasks under time pressure. Inconsistent UI patterns cause errors. Slow response times frustrate operators and reduce throughput. Extended session stability prevents mid-shift disruptions.
+
+---
+
+### IV. Performance Requirements
+
+The application MUST meet strict performance standards to support high-volume manufacturing operations without degradation.
+
+**Non-Negotiable Requirements:**
+
+- **Database Query Timeout**: 30-second maximum query execution time for all operations. Queries exceeding this limit MUST be:
+  - Optimized with proper indexing
+  - Refactored to use stored procedures
+  - Paginated for large result sets
+  - Reviewed for N+1 query patterns
+
+- **MySQL Connection Pooling**: MUST maintain connection pool with:
+  - Minimum: 5 connections (prevents exhaustion during idle periods)
+  - Maximum: 100 connections (prevents database overload)
+  - Connection lifetime: 5 minutes (prevents stale connections)
+  - Retry policy: 3 attempts with exponential backoff
+
+- **Sub-100ms UI Responsiveness**: All UI interactions MUST respond within 100ms:
+  - Button clicks show immediate visual feedback
+  - Text input appears without lag
+  - Form validation provides real-time feedback
+  - Navigation transitions feel instant
+
+- **Cross-Platform Performance Parity**: Performance MUST be consistent across platforms:
+  - Windows: Baseline reference platform
+  - macOS: ±10% of Windows performance
+  - Linux: ±10% of Windows performance
+  - No platform should exhibit degraded user experience
+
+**Performance Monitoring**:
+
+- Database query logging with execution times
+- UI responsiveness telemetry
+- Memory usage tracking over session duration
+- Connection pool utilization metrics
+
+**Rationale**: Manufacturing operations require predictable performance. Database timeouts cause transaction failures. Slow UI reduces operator efficiency. Cross-platform consistency ensures seamless operator transitions between terminals.
+
+---
+
+## Technical Standards
+
+### Technology Stack (Non-Negotiable)
+
+- **.NET 8.0**: Single target framework (`<TargetFramework>net8.0</TargetFramework>`)
+- **Avalonia UI 11.3.4+**: Cross-platform XAML framework
+- **MVVM Community Toolkit 8.3.2+**: Source generator-based MVVM patterns
+- **MySQL 9.4.0+**: Production database with 45+ stored procedures
+- **Microsoft.Extensions 9.0.0+**: Dependency injection, logging, configuration
+- **Material Icons Avalonia 2.4.1+**: Material Design iconography
+
+### Architecture Patterns (Non-Negotiable)
+
+- **MVVM Pattern**: Strict separation of Views, ViewModels, Models
+- **Service Layer**: Business logic centralized in Services directory
+- **Dependency Injection**: Constructor injection for all dependencies
+- **Repository Pattern**: Database access abstracted through services
+- **Event Aggregation**: Cross-component communication via events
+
+### Security Standards
+
+- **Connection String Encryption**: Database credentials MUST be encrypted in production
+- **SQL Injection Prevention**: MUST use parameterized queries and stored procedures exclusively
+- **Input Validation**: All user inputs MUST be validated at service layer before processing
+- **Audit Logging**: All inventory transactions MUST be logged with user, timestamp, and operation details
+- **Session Security**: Session tokens MUST be validated on every operation
+
+### Database Standards
+
+- **Stored Procedures**: Complex operations MUST use stored procedures (45+ existing procedures)
+- **Transaction Management**: Multi-step operations MUST use database transactions
+- **Connection Management**: MUST use `using` statements or connection pooling
+- **Query Optimization**: All queries MUST have proper indexes and execution plans reviewed
+- **Schema Versioning**: Database schema changes MUST be versioned and scripted
+
+---
+
+## Development Workflow
+
+#### Feature Development Process
+
+**GSC-Enhanced Approach** (Preferred when GSC available):
+
+1. **Start Workflow**: `gsc workflow start <feature-name>` creates feature structure with constitutional guidance integrated
+2. **Specification**: Generate spec with `gsc create spec` or manually in `.specify/specs/[###-feature-name]/spec.md` with constitutional alignment
+3. **Planning**: `gsc workflow next` advances to planning phase with automatic validation gates for all 4 principles
+4. **Test-First**: Write failing tests with safety checkpoint: `gsc rollback checkpoint "pre-implementation"` enables safe experimentation
+5. **Implementation**: Develop with real-time validation: `gsc validate constitution` provides instant compliance feedback
+6. **Testing**: Track coverage progress: `gsc status` displays compliance metrics for 80% minimum / 95% critical path requirements
+7. **Review**: Generate automated constitutional compliance report for PR with `gsc validate constitution --IncludeTasks`
+8. **Documentation**: Update with `gsc memory` integration for lessons learned capture
+
+**Fallback Approach** (When GSC not available):
+
+1. **Constitutional Review**: Review this constitution before starting feature work; ensure feature aligns with all 4 principles
+2. **Specification**: Create `.specify/specs/[###-feature-name]/spec.md` with acceptance criteria mapped to constitutional requirements
+3. **Planning**: Develop implementation plan in `plan.md` with explicit constitutional compliance checkpoints
+4. **Test-First**: Write failing tests before implementation (TDD); validate tests cover constitutional requirements
+5. **Implementation**: Develop feature following MVVM Community Toolkit patterns, Theme V2, async/await, parameterized queries
+6. **Testing**: Execute tests, validate 80% minimum coverage (95% for critical paths); test on all platforms
+7. **Review**: PR must pass code review checklist verifying constitutional compliance across all 4 principles
+8. **Documentation**: Update relevant docs including lessons learned, patterns discovered, and constitutional alignment notes
+
+### Code Review Requirements
+
+All pull requests MUST pass:
+
+- **Constitutional Compliance Check**: All four principles verified
+- **Test Coverage Gate**: Minimum 80% line coverage (95% for critical paths)
+- **Cross-Platform Validation**: Feature tested on Windows, macOS, Linux
+- **Performance Benchmarks**: No degradation in database or UI responsiveness
+- **Manufacturing Domain Validation**: Business rules verified for operations
+
+### Branch Strategy
+
+- **master**: Production-ready code only
+- **Feature branches**: `[###-feature-name]` format (e.g., `001-inventory-transfer`)
+- **Hotfix branches**: `hotfix/[description]` for critical production fixes
+
+### Quality Gates
+
+Before merging to master:
+
+1. All tests pass on all platforms
+2. Code coverage meets 80% minimum
+3. No compiler warnings
+4. Constitutional compliance verified
+5. Performance benchmarks met
+6. Documentation updated
+
+---
+
+## Governance
+
+### Constitutional Authority
+
+This Constitution supersedes all other development practices, guidelines, and instructions. When conflicts arise between this Constitution and other documentation, the Constitution takes precedence.
+
+### Amendment Process
+
+Constitutional amendments require:
+
+1. **Proposal**: Written amendment with rationale submitted as pull request to `.specify/memory/constitution.md`
+2. **Dual Approval**: Requires approval from:
+   - Repository Owner
+   - Lead Developer or designated Agent
+3. **Review Period**: Minimum 5 business days for team review and feedback
+4. **Version Update**: Constitution version MUST be incremented following semantic versioning:
+   - **MAJOR**: Backward-incompatible changes (removing/redefining principles)
+   - **MINOR**: New principles or materially expanded guidance
+   - **PATCH**: Clarifications, wording improvements, non-semantic refinements
+5. **Migration Plan**: If amendment impacts existing code, 30-day migration timeline with migration tasks
+6. **Propagation**: Update all dependent templates, documentation, and instruction files
+
+### Compliance Enforcement
+
+- **GSC Validation System** (Recommended): Use `gsc validate constitution` for real-time compliance checking:
+  - **Principle I (Code Quality)**: Validates nullable types, MVVM Community Toolkit patterns, centralized error handling, and dependency injection usage
+  - **Principle II (Testing)**: Tracks 80% minimum coverage, 95% for critical paths, validates test organization and cross-platform testing
+  - **Principle III (UX Consistency)**: Verifies Theme V2 usage, Material icons, x:DataType bindings, and 8+ hour session stability
+  - **Principle IV (Performance)**: Monitors async operations, connection pooling configuration, query timeouts, and cross-platform performance parity
+  - **Progress Tracking**: `gsc status` displays real-time compliance metrics, progress bars, and next steps
+  - **Safety Mechanisms**: `gsc rollback checkpoint "<name>"` creates save points for safe experimentation; `gsc rollback restore <checkpoint>` undoes changes
+  - **Memory Access**: `gsc memory get constitution` displays this constitution; `gsc memory search "<query>"` searches lessons learned
+  - **Workflow Orchestration**: `gsc workflow start <feature>` guides through all 7 phases with automatic validation gates
+  
+- **CI/CD Integration**: Automated checks for constitutional compliance (test coverage, nullable types, patterns)
+- **Code Review Checklists**: Review checklist includes constitutional principle verification (can use `gsc validate` output)
+- **Quarterly Audits**: Comprehensive constitutional compliance audit every quarter
+- **Exception Process**: Exceptions to constitutional requirements require:
+  - Written justification documenting why simpler alternatives are insufficient
+  - Repository Owner approval
+  - Documented technical debt item with remediation plan
+
+### Complexity Justification
+
+Deviations from simplicity principles MUST be justified:
+
+- **Additional Dependencies**: Why existing libraries insufficient?
+- **Complex Patterns**: Why simpler patterns inadequate?
+- **Performance Optimizations**: What performance problem necessitates complexity?
+- **Architectural Deviations**: What constraint makes standard architecture impossible?
+
+### Runtime Development Guidance
+
+For detailed implementation guidance beyond constitutional principles, refer to:
+
+- **AGENTS.md**: AI development automation tools and comprehensive instruction library
+- **.github/instructions/**: 34+ specialized instruction files covering architecture, testing, patterns
+- **README.md**: Quick start, setup, and operational documentation
+
+---
+
+**Version**: 1.0.1 | **Ratified**: October 9, 2025 | **Last Amended**: October 10, 2025

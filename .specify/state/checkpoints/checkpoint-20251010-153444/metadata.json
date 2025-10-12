@@ -1,0 +1,28 @@
+{
+  "feature": "test-feature",
+  "stateSnapshot": {
+    "currentFeature": "test-feature",
+    "currentPhase": "Specification",
+    "currentTask": 0,
+    "totalTasks": 0,
+    "startTimestamp": "2025-10-10T15:21:47Z",
+    "modifiedFiles": [],
+    "checkpointsCount": 1,
+    "constitutionalCompliance": {
+      "testingStandards": false,
+      "performance": false,
+      "uxConsistency": false,
+      "codeQuality": false
+    },
+    "lastUpdateTimestamp": "2025-10-10T15:27:25Z"
+  },
+  "description": "Phase 5 Complete - Status Command with Checkpoints, File Stats, and Constitutional Compliance",
+  "id": "checkpoint-20251010-153444",
+  "fileCount": 1,
+  "modifiedFiles": [
+    ".specify/docs/gsc-phase5-status-tracking.md"
+  ],
+  "phase": "Specification",
+  "timestamp": "2025-10-10T15:34:44Z",
+  "sizeBytes": 15383
+}

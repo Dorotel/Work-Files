@@ -2,6 +2,30 @@
 description: Execute the implementation plan by processing and executing all tasks defined in tasks.md
 ---
 
+# SpecKit Implement
+
+Execute the implementation plan by processing and executing all tasks defined in tasks.md.
+
+This prompt is compatible with both Visual Studio and VS Code GitHub Copilot Chat.
+
+## Usage
+
+**In VS Code**: Type `/speckit.implement` in Copilot Chat
+
+**In Visual Studio**: Reference this file directly:
+```
+#file:.github/prompts/speckit.implement.prompt.md
+Execute implementation for current feature
+```
+
+Or describe the intent:
+```
+Execute the speckit implementation workflow - load tasks.md, check prerequisites, 
+and implement all tasks phase by phase following the .specify methodology
+```
+
+---
+
 ## User Input
 
 ```text
@@ -12,7 +36,24 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup and Prerequisites Check**:
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Use `gsc validate constitution -IncludeTasks` to verify environment and load task information
+   - Parse JSON output for FEATURE_DIR, AVAILABLE_DOCS, and task metadata
+   
+   **Fallback Approach** (Legacy compatibility):
+   - If GSC is not available or command fails, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root
+   - Parse FEATURE_DIR and AVAILABLE_DOCS list
+   
+   **Common Path Resolution**:
+   - All paths must be absolute
+   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot")
+   
+   **Phase Transition Support** (if GSC available):
+   - After completing a major phase (Setup, Tests, Core, Integration, Polish), consider using: `gsc workflow next`
+   - This may automatically update workflow state and suggest next steps
+   - Not required - manual progression still fully supported
 
 2. **Check checklists status** (if FEATURE_DIR/checklists/ exists):
    - Scan all checklist files in the checklists/ directory
@@ -77,7 +118,13 @@ You **MUST** consider the user input before proceeding (if not empty).
    - For parallel tasks [P], continue with successful tasks, report failed ones
    - Provide clear error messages with context for debugging
    - Suggest next steps if implementation cannot proceed
-   - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
+   - **IMPORTANT**: For completed tasks, make sure to mark the task off as [X] in the tasks file
+   
+   **Checkpoint Creation per Task** (if GSC available):
+   - After successfully completing each task, create a checkpoint: `gsc rollback checkpoint "task-<ID>-complete"`
+   - Example: After completing T001, create checkpoint: `gsc rollback checkpoint "task-T001-complete"`
+   - This enables granular rollback if a specific task needs revision
+   - Checkpoint creation failures should be logged but not block implementation progress
 
 8. Completion validation:
    - Verify all required tasks are completed
@@ -85,5 +132,40 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Validate that tests pass and coverage meets requirements
    - Confirm the implementation follows the technical plan
    - Report final status with summary of completed work
+   
+   **Optional Cleanup Preview** (if GSC available):
+   - After completion, consider running: `gsc housekeeping prune --DryRun`
+   - This shows what documentation could be cleaned up without making changes
+   - Helps identify obsolete or redundant documentation from implementation process
+   - Use without `--DryRun` to actually perform cleanup if desired
 
-Note: This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running `/tasks` first to regenerate the task list.
+---
+
+## Visual Studio Integration Notes
+
+When using this prompt in Visual Studio:
+
+1. **Reference the file directly** using `#file:` syntax for better context
+2. **Use `run_command_in_terminal` tool** for PowerShell commands
+3. **Use standard file manipulation tools** (edit_file, create_file, get_file)
+4. **Progress tracking** happens through task completion markers in tasks.md
+
+## VS Code Integration Notes
+
+When using this prompt in VS Code with the full agent mode:
+
+1. **Type `/speckit.implement`** to trigger the workflow
+2. **Agent tools available**: edit, search, new, runCommands, runTasks
+3. **Automatic tool selection** based on task requirements
+
+---
+
+## Notes
+
+This command assumes a complete task breakdown exists in tasks.md. If tasks are incomplete or missing, suggest running the tasks generation workflow first to regenerate the task list.
+
+**Constitutional Compliance**: This workflow follows all four constitutional principles:
+- **Principle I**: Code quality through MVVM patterns, DI, and error handling
+- **Principle II**: Testing standards with 80%+ coverage targets
+- **Principle III**: UX consistency through zero-regression validation
+- **Principle IV**: Performance requirements maintained throughout

@@ -31,9 +31,23 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Execution Steps
 
-1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS list.
-   - All file paths must be absolute.
-   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup**: Establish environment context.
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Run `gsc validate constitution` to collect FEATURE_DIR and constitutional compliance status
+   - Parse JSON output for feature directory path and available documentation
+
+   **Fallback Approach** (Legacy compatibility):
+   - If GSC is not available or command fails, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root
+   - Parse JSON for FEATURE_DIR and AVAILABLE_DOCS list
+
+   **Common Path Resolution**:
+   - All file paths must be absolute
+   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot")
+   
+   **Before Writing Checklist** (Step 5):
+   - Create checkpoint: `gsc rollback checkpoint "checklist-created"` (if GSC available)
+   - This allows rollback if checklist needs regeneration
 
 2. **Clarify intent (dynamic)**: Derive up to THREE initial contextual clarifying questions (no pre-baked catalog). They MUST:
    - Be generated from the user's phrasing + extracted signals from spec/plan/tasks
@@ -285,3 +299,15 @@ Sample items:
 - Correct: Validation of requirement quality
 - Wrong: "Does it do X?" 
 - Correct: "Is X clearly specified?"
+
+---
+
+## Post-Checklist Housekeeping (Optional)
+
+After consolidating or completing checklists, consider running documentation cleanup:
+
+```powershell
+gsc housekeeping prune
+```
+
+This will help identify obsolete checklist files or documentation that can be archived. Use `--DryRun` to preview changes before applying.

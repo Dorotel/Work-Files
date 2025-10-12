@@ -1,0 +1,10 @@
+# Test File for Checkpoint System
+
+This file is created to test the GSC checkpoint functionality.
+
+## Purpose
+- Verify file detection via git status
+- Test file copying to checkpoint directory
+- Validate metadata generation
+
+Created: 2025-10-10

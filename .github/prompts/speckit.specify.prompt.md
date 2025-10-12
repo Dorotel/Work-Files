@@ -16,9 +16,27 @@ The text the user typed after `/speckit.specify` in the triggering message **is*
 
 Given that feature description, do this:
 
-1. Run the script `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"` from repo root and parse its JSON output for BRANCH_NAME and SPEC_FILE. All file paths must be absolute.
-  **IMPORTANT** You must only ever run this script once. The JSON is provided in the terminal as output - always refer to it to get the actual content you're looking for. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Initialize Feature Creation**:
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Alternative entrypoint: `gsc workflow start "<feature-description>"` (if implemented)
+   - This may automatically create the feature structure and return paths
+   
+   **Standard Approach** (Always available):
+   - Run the script `.specify/scripts/powershell/create-new-feature.ps1 -Json "$ARGUMENTS"` from repo root
+   - Parse its JSON output for BRANCH_NAME and SPEC_FILE
+   - All file paths must be absolute
+   - **IMPORTANT**: You must only ever run this script once per feature
+   - The JSON is provided in the terminal as output - always refer to it to get the actual content
+   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot")
+   
+   **Note**: The standard PowerShell script approach must always work. GSC workflow command is an optional convenience that may not yet be fully implemented.
+
 2. Load `.specify/templates/spec-template.md` to understand required sections.
+
+   **Create Checkpoint After Spec Creation** (if GSC available):
+   - After writing spec file (step 4), create checkpoint: `gsc rollback checkpoint "spec-initialized"`
+   - This allows rollback if spec needs regeneration
 
 3. Follow this execution flow:
 

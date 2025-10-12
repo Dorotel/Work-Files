@@ -1,0 +1,32 @@
+{
+  "feature": "002-demo-phase6-test",
+  "stateSnapshot": {
+    "constitutionalCompliance": {
+      "testingStandards": false,
+      "overallScore": 100.0,
+      "lastValidation": "2025-10-10T16:31:21Z",
+      "uxConsistency": false,
+      "performance": false,
+      "codeQuality": true
+    },
+    "currentFeature": "002-demo-phase6-test",
+    "startTimestamp": "10/10/2025 3:47:52 PM",
+    "currentPhase": "Implementation",
+    "currentTask": 4,
+    "checkpointsCount": 2,
+    "modifiedFiles": [],
+    "totalTasks": 7,
+    "lastUpdateTimestamp": "2025-10-10T16:31:21Z"
+  },
+  "description": "test restoration - original state",
+  "id": "checkpoint-20251010-163551",
+  "fileCount": 3,
+  "modifiedFiles": [
+    ".specify/docs/gsc-phases-1-6-audit.md",
+    ".specify/memory/lessons-learned.md",
+    "test-rollback-file.txt"
+  ],
+  "phase": "Implementation",
+  "timestamp": "2025-10-10T16:35:51Z",
+  "sizeBytes": 31594
+}
