@@ -1,0 +1,20 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Style Selector="controls|SettingRow">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}">
+                    <StackPanel Spacing="4">
+                        <Grid ColumnDefinitions="200,*">
+                            <TextBlock Grid.Column="0" Text="{TemplateBinding SettingKey}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <ContentPresenter Grid.Column="1" Content="{TemplateBinding Content}" Margin="8,0" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

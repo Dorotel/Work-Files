@@ -7,7 +7,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using MTM_Template_Application.Services.Secrets;
 using MTM_Template_Application.ViewModels.Configuration;
-using MTM_Template_Application.Views.Configuration;
+using MTM_Template_Application.Controls;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Xunit;

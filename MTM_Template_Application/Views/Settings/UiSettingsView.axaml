@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.UiSettingsView"
+             x:DataType="vm:UiSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:UiSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="UI Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure user interface appearance"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Font Family Setting -->
+            <controls:SettingRow SettingKey="Font Family">
+                <ComboBox SelectedItem="{CompiledBinding FontFamily, Mode=TwoWay}"
+                         MinWidth="200">
+                    <ComboBox.Items>
+                        <x:String>Segoe UI</x:String>
+                        <x:String>Arial</x:String>
+                        <x:String>Calibri</x:String>
+                        <x:String>Inter</x:String>
+                        <x:String>Roboto</x:String>
+                        <x:String>Consolas</x:String>
+                    </ComboBox.Items>
+                </ComboBox>
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Font Family Configuration:"
+                              FontWeight="SemiBold" />
+                    <TextBlock Text="Choose the default font for the entire application"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <TextBlock Text="⚠️ Some fonts may not be available on all systems"
+                              Foreground="{DynamicResource ThemeV2.Status.Warning}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

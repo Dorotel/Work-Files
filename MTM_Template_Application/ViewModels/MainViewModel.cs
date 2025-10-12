@@ -59,9 +59,14 @@ public partial class MainViewModel : ViewModelBase
     public ReadOnlyObservableCollection<ConfigurationError>? ActiveErrors => _errorNotificationService?.ActiveErrors;
 
     /// <summary>
+    /// Count of active configuration errors
+    /// </summary>
+    public int ActiveErrorsCount => _errorNotificationService?.ActiveErrors?.Count ?? 0;
+
+    /// <summary>
     /// Whether there are any active errors to display
     /// </summary>
-    public bool HasActiveErrors => _errorNotificationService?.ActiveErrors.Count > 0;
+    public bool HasActiveErrors => ActiveErrorsCount > 0;
 
     public MainViewModel()
     {
@@ -512,6 +517,52 @@ public partial class MainViewModel : ViewModelBase
         catch (Exception ex)
         {
             _logger?.LogError(ex, "Failed to open debug terminal window");
+        }
+    }
+
+    /// <summary>
+    /// Open the settings window to configure application settings
+    /// </summary>
+    [RelayCommand]
+    private void OpenSettings()
+    {
+        try
+        {
+            // Get the service provider from Program using reflection (same approach as App.axaml.cs)
+            if (Avalonia.Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                var serviceProvider = GetServiceProvider();
+
+                if (serviceProvider != null)
+                {
+                    // Resolve SettingsViewModel from DI container
+                    var settingsViewModel = serviceProvider.GetRequiredService<ViewModels.Settings.SettingsViewModel>();
+
+                    // Create and show the settings window
+                    var settingsWindow = new Views.Settings.SettingsWindow
+                    {
+                        DataContext = settingsViewModel
+                    };
+
+                    if (desktop.MainWindow != null)
+                    {
+                        settingsWindow.ShowDialog(desktop.MainWindow);
+                    }
+                    else
+                    {
+                        settingsWindow.Show();
+                    }
+                    _logger?.LogInformation("Settings window opened");
+                }
+                else
+                {
+                    _logger?.LogWarning("Cannot open settings - service provider not available");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Failed to open settings window");
         }
     }
 

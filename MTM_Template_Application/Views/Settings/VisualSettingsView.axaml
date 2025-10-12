@@ -1,0 +1,59 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.VisualSettingsView"
+             x:DataType="vm:VisualSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:VisualSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Visual ERP Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure Infor Visual ERP API Toolkit integration"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- API Endpoint Setting -->
+            <controls:SettingRow SettingKey="Database Connection">
+                <TextBox Text="{CompiledBinding ApiEndpoint, Mode=TwoWay}"
+                        Watermark="Server=VISUAL\INSTANCE;Database=MTMFG"
+                        MinWidth="400"
+                        UseFloatingWatermark="True" />
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Visual API Toolkit Configuration:"
+                              FontWeight="SemiBold" />
+                    <TextBlock Text="Enter the Visual ERP database server and instance name"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <TextBlock Text="Example: Server=VISUAL\PLAY;Database=MTMFGPLAY"
+                              FontFamily="Consolas"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <TextBlock Text="⚠️ READ-ONLY: Visual API Toolkit provides data queries only. All write operations save to local MAMP MySQL."
+                              Foreground="{DynamicResource ThemeV2.Status.Warning}" />
+                    <TextBlock Text="🔐 Credentials are stored securely in Windows Credential Manager (DPAPI)"
+                              Foreground="{DynamicResource ThemeV2.Status.Info}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

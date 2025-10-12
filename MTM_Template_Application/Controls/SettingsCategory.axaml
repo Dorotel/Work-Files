@@ -1,0 +1,22 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Style Selector="controls|SettingsCategory">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Expander Header="{TemplateBinding CategoryName}"
+                          IsExpanded="{TemplateBinding IsExpanded, Mode=TwoWay}">
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto,*">
+                            <TextBlock Grid.Column="0" Text="{TemplateBinding Icon}" FontSize="18" Margin="0,0,12,0" />
+                            <TextBlock Grid.Column="1" Text="{TemplateBinding CategoryName}" FontSize="14" FontWeight="SemiBold" />
+                        </Grid>
+                    </Expander.Header>
+                    <ItemsControl ItemsSource="{TemplateBinding Children}" Margin="0,8,0,0" />
+                </Expander>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

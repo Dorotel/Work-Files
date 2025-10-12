@@ -53,7 +53,37 @@
 
                 <!-- Center Space -->
                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center"
-                    VerticalAlignment="Center">
+                    VerticalAlignment="Center" Spacing="8">
+
+                    <!-- Settings Button -->
+                    <Button Command="{CompiledBinding OpenSettingsCommand}"
+                        Background="Transparent"
+                        BorderThickness="1"
+                        BorderBrush="{DynamicResource SystemAccentForegroundColor}"
+                        Foreground="{DynamicResource SystemAccentForegroundColor}"
+                        Padding="12,4"
+                        CornerRadius="4"
+                        FontSize="12"
+                        Cursor="Hand"
+                        ToolTip.Tip="Open application settings">
+                        <StackPanel Orientation="Horizontal" Spacing="6">
+                            <TextBlock Text="⚙️" FontSize="14" VerticalAlignment="Center" />
+                            <TextBlock Text="Settings" VerticalAlignment="Center" />
+                        </StackPanel>
+                        <Button.Styles>
+                            <Style Selector="Button:pointerover">
+                                <Setter Property="Background"
+                                    Value="{DynamicResource SystemAccentForegroundColor}" />
+                                <Setter Property="Foreground"
+                                    Value="{DynamicResource SystemAccentColor}" />
+                            </Style>
+                            <Style Selector="Button:pressed">
+                                <Setter Property="Opacity" Value="0.8" />
+                            </Style>
+                        </Button.Styles>
+                    </Button>
+
+                    <!-- Debug Terminal Button -->
                     <Button Command="{CompiledBinding OpenDebugTerminalCommand}"
                         Background="Transparent"
                         BorderThickness="1"
@@ -62,7 +92,8 @@
                         Padding="12,4"
                         CornerRadius="4"
                         FontSize="12"
-                        Cursor="Hand">
+                        Cursor="Hand"
+                        ToolTip.Tip="Open debug terminal">
                         <StackPanel Orientation="Horizontal" Spacing="6">
                             <TextBlock Text="🔧" FontSize="14" VerticalAlignment="Center" />
                             <TextBlock Text="Debug Terminal" VerticalAlignment="Center" />
@@ -398,7 +429,7 @@
                         FontWeight="SemiBold"
                         Foreground="{DynamicResource ThemeV2.Text.Primary}"
                         VerticalAlignment="Center">
-                        <Run Text="{CompiledBinding ActiveErrors.Count, FallbackValue=0}" />
+                        <Run Text="{CompiledBinding ActiveErrorsCount}" />
                         <Run Text=" configuration warning(s)" />
                     </TextBlock>
                 </StackPanel>

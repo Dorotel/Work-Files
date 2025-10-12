@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.CacheSettingsView"
+             x:DataType="vm:CacheSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:CacheSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Cache Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure local cache behavior (LZ4 compressed)"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- TTL Setting -->
+            <controls:SettingRow SettingKey="Time-To-Live (seconds)">
+                <NumericUpDown Value="{CompiledBinding TtlSeconds, Mode=TwoWay}"
+                              Minimum="60"
+                              Maximum="86400"
+                              Increment="60"
+                              MinWidth="150"
+                              FormatString="N0" />
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Cache Time-To-Live (TTL):"
+                              FontWeight="SemiBold" />
+                    <TextBlock Text="How long cached data remains valid before refresh"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <StackPanel Spacing="4" Margin="0,4,0,0">
+                        <TextBlock Text="• 60 seconds = 1 minute (frequent updates)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• 3600 seconds = 1 hour (recommended)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• 86400 seconds = 24 hours (maximum)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    </StackPanel>
+                    <TextBlock Text="💾 Cache uses LZ4 compression (~3:1 ratio)"
+                              Foreground="{DynamicResource ThemeV2.Status.Info}"
+                              Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

@@ -1,0 +1,71 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.LoggingSettingsView"
+             x:DataType="vm:LoggingSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:LoggingSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Logging Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure application logging behavior"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Log Level Setting -->
+            <controls:SettingRow SettingKey="Log Level">
+                <ComboBox SelectedItem="{CompiledBinding LogLevel, Mode=TwoWay}"
+                         MinWidth="200">
+                    <ComboBox.Items>
+                        <x:String>Debug</x:String>
+                        <x:String>Information</x:String>
+                        <x:String>Warning</x:String>
+                        <x:String>Error</x:String>
+                        <x:String>Critical</x:String>
+                    </ComboBox.Items>
+                </ComboBox>
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Log Level Descriptions:"
+                              FontWeight="SemiBold" />
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="• Debug: Detailed diagnostic information (development only)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Information: General application flow (recommended)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Warning: Potential issues that don't prevent operation"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Error: Operation failures requiring attention"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Critical: Application-wide failures"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    </StackPanel>
+                    <TextBlock Text="📁 Logs stored in: logs/app-YYYYMMDD.txt"
+                              Foreground="{DynamicResource ThemeV2.Status.Info}"
+                              Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

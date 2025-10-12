@@ -1,0 +1,57 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Design.PreviewWith>
+        <Border Padding="20" Width="300">
+            <controls:StatusCard
+                Title="Boot Sequence"
+                Status="Complete"
+                IconSource="CheckCircle"
+                Background="#E8F5E9" />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|StatusCard">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
+                        Padding="16">
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="12">
+                        <!-- Icon -->
+                        <TextBlock Grid.Column="0" Grid.RowSpan="2"
+                                   Text="{TemplateBinding IconSource}"
+                                   FontSize="32"
+                                   VerticalAlignment="Center"
+                                   Foreground="{TemplateBinding Foreground}" />
+
+                        <!-- Title -->
+                        <TextBlock Grid.Column="1" Grid.Row="0"
+                                   Text="{TemplateBinding Title}"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="{TemplateBinding Foreground}" />
+
+                        <!-- Status -->
+                        <TextBlock Grid.Column="1" Grid.Row="1"
+                                   Text="{TemplateBinding Status}"
+                                   FontSize="14"
+                                   Foreground="{TemplateBinding Foreground}"
+                                   Opacity="0.8"
+                                   Margin="0,4,0,0" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Default styling -->
+        <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+    </Style>
+
+</Styles>

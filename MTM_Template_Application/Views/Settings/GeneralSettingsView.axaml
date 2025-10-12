@@ -1,0 +1,60 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.GeneralSettingsView"
+             x:DataType="vm:GeneralSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:GeneralSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="General Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure application appearance and startup behavior"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Theme Setting -->
+            <controls:SettingRow SettingKey="Theme">
+                <ComboBox SelectedItem="{CompiledBinding Theme, Mode=TwoWay}"
+                         MinWidth="200">
+                    <ComboBox.Items>
+                        <x:String>Light</x:String>
+                        <x:String>Dark</x:String>
+                        <x:String>Auto</x:String>
+                    </ComboBox.Items>
+                </ComboBox>
+            </controls:SettingRow>
+
+            <!-- Language Setting -->
+            <controls:SettingRow SettingKey="Language">
+                <ComboBox SelectedItem="{CompiledBinding Language, Mode=TwoWay}"
+                         MinWidth="200">
+                    <ComboBox.Items>
+                        <x:String>en-US</x:String>
+                        <x:String>es-ES</x:String>
+                        <x:String>fr-FR</x:String>
+                        <x:String>de-DE</x:String>
+                    </ComboBox.Items>
+                </ComboBox>
+            </controls:SettingRow>
+
+            <!-- Start with Windows Setting -->
+            <controls:SettingRow SettingKey="Start with Windows">
+                <CheckBox IsChecked="{CompiledBinding StartWithWindows, Mode=TwoWay}"
+                         Content="Launch application automatically when Windows starts" />
+            </controls:SettingRow>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

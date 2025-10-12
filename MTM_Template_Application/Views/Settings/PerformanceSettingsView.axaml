@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.PerformanceSettingsView"
+             x:DataType="vm:PerformanceSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:PerformanceSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Performance Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure performance budgets and thresholds"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Boot Target Setting -->
+            <controls:SettingRow SettingKey="Boot Target (milliseconds)">
+                <NumericUpDown Value="{CompiledBinding BootTargetMs, Mode=TwoWay}"
+                              Minimum="1000"
+                              Maximum="30000"
+                              Increment="1000"
+                              MinWidth="150"
+                              FormatString="N0" />
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Boot Target Configuration:"
+                              FontWeight="SemiBold" />
+                    <TextBlock Text="Maximum acceptable boot time for the application"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <StackPanel Spacing="4" Margin="0,4,0,0">
+                        <TextBlock Text="• 5000 ms = 5 seconds (aggressive)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• 10000 ms = 10 seconds (recommended)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• 15000 ms = 15 seconds (relaxed)"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    </StackPanel>
+                    <TextBlock Text="⏱️ Debug Terminal displays boot timeline against this target"
+                              Foreground="{DynamicResource ThemeV2.Status.Info}"
+                              Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
