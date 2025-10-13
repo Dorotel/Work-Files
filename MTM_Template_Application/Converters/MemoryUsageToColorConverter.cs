@@ -33,18 +33,16 @@ public class MemoryUsageToColorConverter : IValueConverter
     {
         if (value is not double memoryUsageMB)
         {
-            return new SolidColorBrush(GrayColor); // Fallback for invalid input
+            return GrayColor; // Fallback for invalid input
         }
 
-        var color = memoryUsageMB switch
+        return memoryUsageMB switch
         {
             < YellowThreshold => GreenColor,           // Good: <70MB
             >= YellowThreshold and < RedThreshold => YellowColor, // Moderate: 70-90MB
             >= RedThreshold => RedColor,               // Critical: >90MB
             _ => GrayColor                             // Fallback
         };
-
-        return new SolidColorBrush(color);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

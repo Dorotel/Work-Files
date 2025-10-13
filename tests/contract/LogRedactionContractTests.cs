@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using MTM_Template_Application.Services.Configuration;
 using MTM_Template_Application.Services.Secrets;
+using MTM_Template_Tests.TestHelpers;
 using NSubstitute;
 using Serilog;
 using Serilog.Events;
@@ -53,7 +54,7 @@ public class LogRedactionContractTests : IDisposable
     [InlineData("Token")]
     [InlineData("Secret")]
     [Trait("Category", "Contract")]
-    public void ConfigurationService_DoesNotLogSensitiveKeys(string sensitiveKey)
+    public async Task ConfigurationService_DoesNotLogSensitiveKeys(string sensitiveKey)
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -61,8 +62,7 @@ public class LogRedactionContractTests : IDisposable
         var service = new ConfigurationService(logger);
 
         // Act - Attempt to set a sensitive value
-        var task = service.SetValue($"Test:{sensitiveKey}", "SensitiveValue123", CancellationToken.None);
-        task.Wait();
+        await service.SetValue($"Test:{sensitiveKey}", "SensitiveValue123", CancellationToken.None);
 
         // Assert - Log should not contain the plaintext value
         var logMessages = _logSink.LogEvents.Select(e => e.RenderMessage()).ToList();
@@ -74,7 +74,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void ConfigurationService_RedactsSensitiveValues_InLogOutput()
+    public async Task ConfigurationService_RedactsSensitiveValues_InLogOutput()
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -82,8 +82,7 @@ public class LogRedactionContractTests : IDisposable
         var service = new ConfigurationService(logger);
 
         // Act - Set a password configuration
-        var task = service.SetValue("Database:Password", "SuperSecret123!", CancellationToken.None);
-        task.Wait();
+        await service.SetValue("Database:Password", "SuperSecret123!", CancellationToken.None);
 
         // Assert - Check if redaction marker exists (if implemented)
         var logMessages = _logSink.LogEvents.Select(e => e.RenderMessage()).ToList();
@@ -104,10 +103,16 @@ public class LogRedactionContractTests : IDisposable
         }
     }
 
-    [Fact]
+    [WindowsOnlyFact]
     [Trait("Category", "Contract")]
     public async Task SecretsService_NeverLogsCredentialValues()
     {
+        // Skip test on non-Windows platforms (WindowsSecretsService uses DPAPI)
+        if (!OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
         var logger = loggerFactory.CreateLogger<WindowsSecretsService>();
@@ -132,7 +137,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void ConfigurationService_RedactsMultipleSensitiveKeys()
+    public async Task ConfigurationService_RedactsMultipleSensitiveKeys()
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -150,8 +155,7 @@ public class LogRedactionContractTests : IDisposable
         // Act - Set multiple sensitive values
         foreach (var kvp in sensitiveKeys)
         {
-            var task = service.SetValue(kvp.Key, kvp.Value, CancellationToken.None);
-            task.Wait();
+            await service.SetValue(kvp.Key, kvp.Value, CancellationToken.None);
         }
 
         // Assert - None of the sensitive values should appear in logs
@@ -167,7 +171,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void LogRedaction_AllowsNonSensitiveKeys_InLogs()
+    public async Task LogRedaction_AllowsNonSensitiveKeys_InLogs()
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -175,8 +179,7 @@ public class LogRedactionContractTests : IDisposable
         var service = new ConfigurationService(logger);
 
         // Act - Set non-sensitive configuration values
-        var task = service.SetValue("Display:Theme", "Dark", CancellationToken.None);
-        task.Wait();
+        await service.SetValue("Display:Theme", "Dark", CancellationToken.None);
 
         // Assert - Non-sensitive values CAN appear in logs (for debugging)
         var logMessages = _logSink.LogEvents.Select(e => e.RenderMessage()).ToList();
@@ -188,7 +191,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void LogRedaction_WorksWithStructuredLogging()
+    public async Task LogRedaction_WorksWithStructuredLogging()
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -196,8 +199,7 @@ public class LogRedactionContractTests : IDisposable
         var service = new ConfigurationService(logger);
 
         // Act - Set configuration that might use structured logging
-        var task = service.SetValue("OAuth:ClientSecret", "structuredSecretValue", CancellationToken.None);
-        task.Wait();
+        await service.SetValue("OAuth:ClientSecret", "structuredSecretValue", CancellationToken.None);
 
         // Assert - Check structured logging properties
         var logEvents = _logSink.LogEvents.ToList();
@@ -219,7 +221,7 @@ public class LogRedactionContractTests : IDisposable
     [InlineData("email")]    // Email is NOT sensitive (just identifier)
     [InlineData("userId")]   // UserId is NOT sensitive (just identifier)
     [Trait("Category", "Contract")]
-    public void LogRedaction_DoesNotRedactIdentifiers(string identifierKey)
+    public async Task LogRedaction_DoesNotRedactIdentifiers(string identifierKey)
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -228,8 +230,7 @@ public class LogRedactionContractTests : IDisposable
 
         // Act - Set identifier values (NOT sensitive)
         var identifierValue = $"{identifierKey}Value123";
-        var task = service.SetValue($"User:{identifierKey}", identifierValue, CancellationToken.None);
-        task.Wait();
+        await service.SetValue($"User:{identifierKey}", identifierValue, CancellationToken.None);
 
         // Assert - Identifiers CAN appear in logs (they're not secrets)
         // This test ensures we don't over-redact non-sensitive data
@@ -239,7 +240,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void LogRedaction_HandlesCaseInsensitiveSensitiveKeys()
+    public async Task LogRedaction_HandlesCaseInsensitiveSensitiveKeys()
     {
         // Arrange
         var loggerFactory = LoggerFactory.Create(builder => builder.AddSerilog(_serilogLogger));
@@ -260,8 +261,7 @@ public class LogRedactionContractTests : IDisposable
             // Record count before test
             var beforeCount = _logSink.LogEvents.Count();
 
-            var task = service.SetValue(key, "TestPassword123", CancellationToken.None);
-            task.Wait();
+            await service.SetValue(key, "TestPassword123", CancellationToken.None);
 
             // Get only new log events after this operation
             var newLogMessages = _logSink.LogEvents.Skip(beforeCount).Select(e => e.RenderMessage()).ToList();
@@ -278,7 +278,7 @@ public class LogRedactionContractTests : IDisposable
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void LogLevel_Debug_DoesNotExposeSecrets()
+    public async Task LogLevel_Debug_DoesNotExposeSecrets()
     {
         // Arrange
         var logSink = new InMemorySink();
@@ -292,8 +292,7 @@ public class LogRedactionContractTests : IDisposable
         var service = new ConfigurationService(logger);
 
         // Act - Even at debug level, secrets should not leak
-        var task = service.SetValue("Debug:Secret", "DebugSecretValue", CancellationToken.None);
-        task.Wait();
+        await service.SetValue("Debug:Secret", "DebugSecretValue", CancellationToken.None);
 
         // Assert
         var logMessages = logSink.LogEvents.Select(e => e.RenderMessage()).ToList();

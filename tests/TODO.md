@@ -40,37 +40,7 @@ Comprehensive tracking of test improvements, skipped tests, technical debt, and 
 
 ## 🟡 Medium Priority - Code Quality
 
-### 2. xUnit1031 Warnings - Blocking Task Operations (9 warnings)
-**Files**: 
-- `tests/contract/FeatureFlagEvaluatorContractTests.cs` (Lines 133, 348)
-- `tests/contract/LogRedactionContractTests.cs` (Lines 65, 86, 154, 179, 200, 232, 264, 296)
-
-**Action Items:**
-- [ ] Convert all 9 test methods to async Task pattern
-- [ ] Replace `.Result` with `await`
-- [ ] Replace `.Wait()` with `await`
-- [ ] Add `.editorconfig` rule to prevent future blocking calls
-
-**Estimated Effort**: 1-2 hours
-
----
-
-### 3. CA1416 Warnings - Platform-Specific APIs (6 warnings)
-**Files**: `tests/contract/LogRedactionContractTests.cs` (Lines 113, 114, 119, 120, 130)
-
-**Action Items:**
-- [ ] Add platform detection to all 6 WindowsSecretsService tests
-- [ ] Consider creating `[WindowsOnlyFact]` custom attribute
-- [ ] Add similar checks for AndroidSecretsService tests
-- [ ] Update CI/CD to run platform-specific tests on correct agents
-
-**Estimated Effort**: 2-3 hours
-
----
-
-## 🟢 Low Priority - Enhancements
-
-### 4. Missing Test Coverage Areas
+### 2. Missing Test Coverage Areas
 
 #### Visual API Integration
 - [ ] Visual API authentication flow end-to-end
@@ -259,6 +229,17 @@ dotnet test  # All tests including Performance
 
 ## ✅ Recently Completed (October 12, 2025)
 
+- [x] Fixed CA1416 platform warnings (WindowsSecretsService in LogRedactionContractTests)
+  - Created `tests/TestHelpers/WindowsOnlyFactAttribute.cs` for reusable platform-specific tests
+  - Applied `[WindowsOnlyFact]` with platform guard to `SecretsService_NeverLogsCredentialValues` test
+  - Zero build warnings achieved (was 5 CA1416 warnings)
+  - Platform-specific test pattern established for future Android/iOS tests
+- [x] Fixed 2 ConvertBack test failures (Color vs SolidColorBrush in test inputs)
+- [x] Fixed xUnit1031 warnings (9 test methods converted to async Task pattern)
+  - `tests/contract/FeatureFlagEvaluatorContractTests.cs` (2 methods)
+  - `tests/contract/LogRedactionContractTests.cs` (7 methods)
+  - Replaced all `.Result` and `.Wait()` with `await`
+- [x] Fixed 22 Avalonia converter test assertions (Color vs SolidColorBrush)
 - [x] Fixed 20 Avalonia converter threading issues
 - [x] Fixed 4 Debug Terminal AXAML control name issues
 - [x] Fixed 1 Performance Monitoring cancellation handling

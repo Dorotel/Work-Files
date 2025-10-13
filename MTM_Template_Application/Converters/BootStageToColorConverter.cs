@@ -45,12 +45,12 @@ public class BootStageToColorConverter : IValueConverter
 
         if (value is not double durationMs)
         {
-            return new SolidColorBrush(GrayColor); // No data
+            return GrayColor; // No data
         }
 
         if (parameter is not string stageId)
         {
-            return new SolidColorBrush(GrayColor); // Invalid parameter
+            return GrayColor; // Invalid parameter
         }
 
         var targetMs = stageId switch
@@ -61,8 +61,7 @@ public class BootStageToColorConverter : IValueConverter
             _ => double.MaxValue // Unknown stage, always green
         };
 
-        var color = durationMs <= targetMs ? GreenColor : RedColor;
-        return new SolidColorBrush(color);
+        return durationMs <= targetMs ? GreenColor : RedColor;
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
