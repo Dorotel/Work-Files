@@ -63,7 +63,7 @@ public class DebugTerminalNavigationTests
         window.Show();
         await Task.Delay(100);
 
-        var navigationMenu = window.FindControl<ItemsControl>("NavigationMenu");
+        var navigationMenu = window.FindControl<StackPanel>("NavigationMenu");
 
         // Assert
         navigationMenu.Should().NotBeNull("Navigation menu should exist");

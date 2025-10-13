@@ -18,9 +18,10 @@ namespace MTM_Template_Application.Converters;
 /// </summary>
 public class BootStageToColorConverter : IValueConverter
 {
-    private static readonly SolidColorBrush GreenBrush = new(Color.FromRgb(76, 175, 80));   // #4CAF50 (meets target)
-    private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(244, 67, 54));     // #F44336 (exceeds target)
-    private static readonly SolidColorBrush GrayBrush = new(Color.FromRgb(158, 158, 158));  // #9E9E9E (no data)
+    // Define colors as static readonly to avoid UI thread issues during static initialization
+    private static readonly Color GreenColor = Color.FromRgb(76, 175, 80);   // #4CAF50 (meets target)
+    private static readonly Color RedColor = Color.FromRgb(244, 67, 54);     // #F44336 (exceeds target)
+    private static readonly Color GrayColor = Color.FromRgb(158, 158, 158);  // #9E9E9E (no data)
 
     /// <summary>
     /// Stage 0 performance target (milliseconds)
@@ -43,10 +44,14 @@ public class BootStageToColorConverter : IValueConverter
         // Parameter: stage identifier ("Stage0", "Stage1", "Stage2")
 
         if (value is not double durationMs)
-            return GrayBrush; // No data
+        {
+            return new SolidColorBrush(GrayColor); // No data
+        }
 
         if (parameter is not string stageId)
-            return GrayBrush; // Invalid parameter
+        {
+            return new SolidColorBrush(GrayColor); // Invalid parameter
+        }
 
         var targetMs = stageId switch
         {
@@ -56,7 +61,8 @@ public class BootStageToColorConverter : IValueConverter
             _ => double.MaxValue // Unknown stage, always green
         };
 
-        return durationMs <= targetMs ? GreenBrush : RedBrush;
+        var color = durationMs <= targetMs ? GreenColor : RedColor;
+        return new SolidColorBrush(color);
     }
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

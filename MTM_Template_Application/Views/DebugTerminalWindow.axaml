@@ -54,8 +54,9 @@
 
         <!-- SplitView with Navigation and Content -->
         <SplitView Grid.Row="1"
+            Name="MainSplitView"
             IsPaneOpen="{CompiledBinding IsPaneOpen}"
-            DisplayMode="CompactInline"
+            DisplayMode="Inline"
             CompactPaneLength="50"
             OpenPaneLength="250">
 
@@ -64,7 +65,7 @@
                 <Border Background="{DynamicResource SystemChromeMediumLowColor}"
                     BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                     BorderThickness="0,0,1,0">
-                    <StackPanel Spacing="4" Margin="8">
+                    <StackPanel Name="NavigationMenu" Spacing="4" Margin="8">
                         <!-- Feature 001: Boot -->
                         <Button Classes="NavigationButton"
                             Command="{CompiledBinding SelectFeatureCommand}"
@@ -114,6 +115,7 @@
 
             <!-- Content Area with Dynamic Sections -->
             <ScrollViewer
+                Name="FeatureContentArea"
                 VerticalScrollBarVisibility="Visible"
                 HorizontalScrollBarVisibility="Disabled"
                 Background="{DynamicResource SystemChromeMediumColor}"

@@ -20,6 +20,8 @@ public sealed class PerformanceMonitoringService : IPerformanceMonitoringService
     private TimeSpan? _lastTotalProcessorTime;
     private bool _isMonitoring;
     private bool _disposed;
+    private Task? _monitoringTask;
+    private CancellationTokenSource? _monitoringCts;
 
     public bool IsMonitoring
     {
@@ -132,37 +134,61 @@ public sealed class PerformanceMonitoringService : IPerformanceMonitoringService
             }
 
             _isMonitoring = true;
+            _monitoringCts = new CancellationTokenSource();
         }
 
         _logger.LogInformation("Starting performance monitoring with {Interval}s interval",
             interval.TotalSeconds);
 
-        try
+        // Start monitoring task in background
+        _monitoringTask = Task.Run(async () =>
         {
-            // Monitor until cancellation
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
-                await CaptureSnapshotAsync(cancellationToken);
-                await Task.Delay(interval, cancellationToken);
+                // Create a linked token that responds to both external cancellation and our internal CTS
+                using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(
+                    cancellationToken, _monitoringCts.Token);
+
+                // Monitor until cancellation
+                while (!linkedCts.Token.IsCancellationRequested)
+                {
+                    // Check IsMonitoring flag as well (for StopMonitoringAsync)
+                    lock (_bufferLock)
+                    {
+                        if (!_isMonitoring)
+                        {
+                            break;
+                        }
+                    }
+
+                    await CaptureSnapshotAsync(linkedCts.Token);
+                    await Task.Delay(interval, linkedCts.Token);
+                }
             }
-        }
-        catch (OperationCanceledException)
-        {
-            _logger.LogInformation("Performance monitoring cancelled");
-            throw; // Re-throw to satisfy test expectations
-        }
-        finally
-        {
-            lock (_bufferLock)
+            catch (OperationCanceledException)
             {
-                _isMonitoring = false;
+                _logger.LogInformation("Performance monitoring cancelled");
+                throw; // Re-throw to propagate cancellation to caller
             }
-        }
+            finally
+            {
+                lock (_bufferLock)
+                {
+                    _isMonitoring = false;
+                }
+            }
+        }, cancellationToken);
+
+        // Return the monitoring task so caller can await cancellation exceptions
+        await _monitoringTask;
     }
 
     /// <inheritdoc/>
     public async Task StopMonitoringAsync()
     {
+        Task? taskToWait = null;
+        CancellationTokenSource? ctsToDispose = null;
+
         lock (_bufferLock)
         {
             if (!_isMonitoring)
@@ -171,11 +197,36 @@ public sealed class PerformanceMonitoringService : IPerformanceMonitoringService
             }
 
             _isMonitoring = false;
+            taskToWait = _monitoringTask;
+            ctsToDispose = _monitoringCts;
         }
 
         _logger.LogInformation("Stopping performance monitoring");
 
-        await Task.CompletedTask;
+        // Cancel the monitoring task
+        ctsToDispose?.Cancel();
+
+        // Wait for the monitoring task to complete
+        if (taskToWait != null)
+        {
+            try
+            {
+                await taskToWait;
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when stopping
+            }
+        }
+
+        // Clean up
+        ctsToDispose?.Dispose();
+
+        lock (_bufferLock)
+        {
+            _monitoringTask = null;
+            _monitoringCts = null;
+        }
     }
 
     private async Task CaptureSnapshotAsync(CancellationToken cancellationToken)
@@ -255,6 +306,13 @@ public sealed class PerformanceMonitoringService : IPerformanceMonitoringService
         {
             _isMonitoring = false;
         }
+
+        // Cancel and dispose monitoring resources
+        _monitoringCts?.Cancel();
+        _monitoringCts?.Dispose();
+
+        // Note: We don't wait for _monitoringTask here because Dispose is synchronous
+        // The task will complete on its own after cancellation
 
         _currentProcess?.Dispose();
 
