@@ -10,15 +10,15 @@ Auto-generated from all feature plans. Last updated: 2025-10-10
 
 GitHub Copilot automatically includes these instruction files for all code generation:
 
-- #file:instructions/csharp-dotnet8.instructions.md
-- #file:instructions/avalonia-ui.instructions.md
-- #file:instructions/mvvm-community-toolkit.instructions.md
-- #file:instructions/mysql-database.instructions.md
-- #file:instructions/testing-standards.instructions.md
-- #file:instructions/documentation.instructions.md
-- #file:instructions/security-best-practices.instructions.md
-- #file:instructions/performance-optimization.instructions.md
-- #file:instructions/code-review-standards.instructions.md
+- #file:instructions/Framework/csharp-dotnet8.instructions.md
+- #file:instructions/Framework/avalonia-ui.instructions.md
+- #file:instructions/Framework/mvvm-community-toolkit.instructions.md
+- #file:instructions/Services/DataLayer/mysql-database.instructions.md
+- #file:instructions/Testing/testing-standards.instructions.md
+- #file:instructions/Development/documentation.instructions.md
+- #file:instructions/Quality/security-best-practices.instructions.md
+- #file:instructions/Quality/performance-optimization.instructions.md
+- #file:instructions/Quality/code-review-standards.instructions.md
 
 ## Memory Files
 

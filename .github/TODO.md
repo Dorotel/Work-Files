@@ -261,6 +261,11 @@ Comprehensive tracking of GitHub Copilot configuration, prompts, chatmodes, inst
 - [ ] Document schema format in `mamp-database/README.md`
 
 **Estimated Effort**: 3-4 hours
+**Test Requirements** (Pester tests):
+- [ ] Pester: Schema validation script detects invalid JSON structure
+- [ ] Pester: Schema validation script validates all instruction files
+- [ ] Pester: Schema validation script reports errors with line numbers
+- **Test Files**: `tests/pester/SchemaValidation.Tests.ps1`
 
 ---
 

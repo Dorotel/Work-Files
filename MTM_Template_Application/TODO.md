@@ -35,6 +35,12 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 
 **Related Spec**: `docs/features/009-configuration-error-dialog/`  
 **Estimated Effort**: 3-4 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: NotificationService shows success toast (non-blocking, auto-dismiss after 3s)
+- [ ] Unit: NotificationService shows error dialog (blocking, requires acknowledgment)
+- [ ] Unit: Multiple notifications queue correctly (no overlap)
+- [ ] Integration: Notification displays in actual UI (DebugTerminalView test)
+- **Test Files**: `tests/unit/Services/UI/NotificationServiceTests.cs`
 
 ---
 
@@ -90,6 +96,15 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Wire up to Avalonia routing system
 
 **Estimated Effort**: 6-8 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: NavigateTo switches current ViewModel correctly
+- [ ] Unit: GoBack navigates to previous ViewModel from history stack
+- [ ] Unit: GoForward navigates to next ViewModel after GoBack
+- [ ] Unit: Navigation history maintains correct order (LIFO stack)
+- [ ] Unit: View caching retrieves cached ViewModel instances
+- [ ] Integration: Navigation state persists across app sessions
+- [ ] Integration: Navigation triggers view transition animations
+- **Test Files**: `tests/unit/Services/Navigation/NavigationServiceTests.cs`
 
 ---
 
@@ -126,6 +141,11 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Add pre-restart confirmation dialog
 
 **Estimated Effort**: 4-5 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: MySql connection pool metrics query returns correct format
+- [ ] Integration: DiagnosticsService retrieves actual connection pool stats from MySql.Data
+- [ ] Performance: Metrics collection completes within 100ms budget
+- **Test Files**: `tests/unit/Services/Diagnostics/DiagnosticsServiceTests.cs`
 
 ---
 
@@ -143,6 +163,12 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Add Visual API connection test button in settings
 
 **Estimated Effort**: 3-4 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: NotificationService shows success toast (non-blocking, auto-dismiss after 3s)
+- [ ] Unit: NotificationService shows error dialog (blocking, requires acknowledgment)
+- [ ] Unit: Multiple notifications queue correctly (no overlap)
+- [ ] Integration: Notification displays in actual UI (DebugTerminalView test)
+- **Test Files**: `tests/unit/Services/UI/NotificationServiceTests.cs`
 
 ---
 
@@ -162,6 +188,12 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Add feature flag documentation generator
 
 **Estimated Effort**: 3-4 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: NotificationService shows success toast (non-blocking, auto-dismiss after 3s)
+- [ ] Unit: NotificationService shows error dialog (blocking, requires acknowledgment)
+- [ ] Unit: Multiple notifications queue correctly (no overlap)
+- [ ] Integration: Notification displays in actual UI (DebugTerminalView test)
+- **Test Files**: `tests/unit/Services/UI/NotificationServiceTests.cs`
 
 ---
 
@@ -194,6 +226,11 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Implement performance regression detection
 
 **Estimated Effort**: 6-8 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: Performance metrics collection captures correct data points
+- [ ] Unit: Memory leak detection identifies increasing memory trends
+- [ ] Performance: Metrics collection overhead < 5% of monitored operation time
+- **Test Files**: `tests/unit/Services/Diagnostics/PerformanceMonitoringTests.cs`
 
 ---
 
@@ -307,6 +344,12 @@ Comprehensive tracking of application enhancements, incomplete features, technic
 - [ ] Document async best practices in CONTRIBUTING.md
 
 **Estimated Effort**: 3-4 hours
+**Test Requirements** (TDD - Write tests first):
+- [ ] Unit: NotificationService shows success toast (non-blocking, auto-dismiss after 3s)
+- [ ] Unit: NotificationService shows error dialog (blocking, requires acknowledgment)
+- [ ] Unit: Multiple notifications queue correctly (no overlap)
+- [ ] Integration: Notification displays in actual UI (DebugTerminalView test)
+- **Test Files**: `tests/unit/Services/UI/NotificationServiceTests.cs`
 
 ---
 
