@@ -455,7 +455,10 @@ public static class ServiceCollectionExtensions
         Serilog.Log.Verbose("[DI] Registering SettingsViewModel");
         services.AddTransient<ViewModels.Settings.SettingsViewModel>();
 
-        Serilog.Log.Information("[DI] AddViewModels() - Registered 4 ViewModels");
+        Serilog.Log.Verbose("[DI] Registering ConfigurationErrorDialogViewModel");
+        services.AddTransient<ConfigurationErrorDialogViewModel>();
+
+        Serilog.Log.Information("[DI] AddViewModels() - Registered 5 ViewModels");
         return services;
     }
 

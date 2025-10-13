@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MTM_Template_Application.ViewModels;
 using Serilog;
 
@@ -94,7 +95,8 @@ public partial class SplashWindow : Window
                     }
 
                     Log.Debug("[SplashWindow] Creating MainWindow");
-                    var mainWindow = new MainWindow
+                    var logger = serviceProvider.GetRequiredService<ILogger<MainWindow>>();
+                    var mainWindow = new MainWindow(serviceProvider, logger)
                     {
                         DataContext = mainViewModel
                     };
@@ -111,8 +113,10 @@ public partial class SplashWindow : Window
                 else
                 {
                     Log.Error("[SplashWindow] Service provider is null, cannot create MainViewModel");
-                    // Fallback: create MainWindow without DI
-                    var mainWindow = new MainWindow
+                    // Fallback: create MainWindow without DI - create minimal logger
+                    var loggerFactory = LoggerFactory.Create(builder => { });
+                    var logger = loggerFactory.CreateLogger<MainWindow>();
+                    var mainWindow = new MainWindow(null!, logger)  // Service provider null - fallback mode
                     {
                         DataContext = new MainViewModel()
                     };
