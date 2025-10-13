@@ -108,7 +108,7 @@ public class FeatureFlagEvaluatorContractTests
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void RegisterFlag_WithDuplicateName_UpdatesExistingFlag()
+    public async Task RegisterFlag_WithDuplicateName_UpdatesExistingFlag()
     {
         // Arrange
         var evaluator = new FeatureFlagEvaluator(_logger);
@@ -130,7 +130,7 @@ public class FeatureFlagEvaluatorContractTests
         evaluator.RegisterFlag(flag2); // Should update, not throw
 
         // Assert
-        var result = evaluator.IsEnabledAsync("Test.Feature").Result;
+        var result = await evaluator.IsEnabledAsync("Test.Feature");
         result.Should().BeTrue(); // Second registration should win
     }
 
@@ -328,7 +328,7 @@ public class FeatureFlagEvaluatorContractTests
 
     [Fact]
     [Trait("Category", "Contract")]
-    public void IsEnabledAsync_PerformanceTarget_LessThan5Milliseconds()
+    public async Task IsEnabledAsync_PerformanceTarget_LessThan5Milliseconds()
     {
         // Arrange
         var evaluator = new FeatureFlagEvaluator(_logger);
@@ -345,7 +345,7 @@ public class FeatureFlagEvaluatorContractTests
         // Act
         for (int i = 0; i < 1000; i++)
         {
-            var result = evaluator.IsEnabledAsync("Performance.Test", userId: i).Result;
+            var result = await evaluator.IsEnabledAsync("Performance.Test", userId: i);
         }
         stopwatch.Stop();
 

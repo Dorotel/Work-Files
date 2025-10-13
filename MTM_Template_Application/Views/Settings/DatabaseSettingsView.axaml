@@ -1,0 +1,55 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.DatabaseSettingsView"
+             x:DataType="vm:DatabaseSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:DatabaseSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Database Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure MySQL database connection"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Connection String Setting -->
+            <controls:SettingRow SettingKey="Connection String">
+                <TextBox Text="{CompiledBinding ConnectionString, Mode=TwoWay}"
+                        Watermark="Server=localhost;Database=mtm_template_dev;User=root;Password=***"
+                        MinWidth="400"
+                        UseFloatingWatermark="True" />
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Connection String Format:"
+                              FontWeight="SemiBold" />
+                    <TextBlock Text="Server=hostname;Database=database_name;User=username;Password=password;Port=3306"
+                              FontFamily="Consolas"
+                              Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    <TextBlock Text="⚠️ Changes require application restart"
+                              Foreground="{DynamicResource ThemeV2.Status.Warning}" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

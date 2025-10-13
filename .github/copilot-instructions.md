@@ -1,895 +1,196 @@
-# MTM_Avalonia_Template Development Guidelines
+# MTM_WIP_Application_Avalonia Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-10-05
-
-## Radio Silence Mode (Agent Protocol)
-
-Purpose: Execute large or critical tasks with zero chatter and maximal focus. Only produce concrete deliverables.
-
-When to enter
-- Running any Prompt from the [Specify] workflow, Large refactors, complex features, critical bug fixes, perf/security work, infra/architectural changes, major dependency updates, documentation/testing/quality/i18n/l10n/UX/accessibility/cross-platform/CI-CD improvements.
-
-Entry handshake (required)
-1) Clarify unknowns first (single, concise question set).
-2) Post a short plan and expected outputs, including a timebox.
-3) Await user approval to proceed. If explicitly told to “enter radio silence”, proceed immediately.
-4) If using any of the .specify prompts, enter Radio Silence.
-
-Operating rules (during silence)
-- No commentary, no status updates, no thoughts.
-- Output only deliverables in the following formats:
-  - PATCH (existing file edit)
-    - Path (repo-relative)
-    - Unified diff in a fenced code block
-  - NEW FILE
-    - Path + full file contents in a fenced code block
-  - DELETE FILE
-    - Path only
-  - TEST
-    - Commands to run and minimal pass/fail summary
-  - COMMIT
-    - Concise, conventional commit message (single subject + optional body)
-- Enforce repository standards at all times:
-  - Version compatibility (net9.0, Avalonia 11.3.6, MVVM Toolkit 8.4.0, etc.)
-  - Nullability, async + CancellationToken, DI patterns
-  - Avalonia CompiledBinding with x:DataType (no Binding/ReflectionBinding)
-  - MySQL parameterized queries only; use schema from .github/mamp-database/schema-tables.json
-  - Follow existing code patterns; do not introduce new patterns
-
-Allowed interrupts (break silence with one concise question)
-- Spec ambiguity or missing business decision
-- Missing secrets/config/paths or unresolved schema uncertainty
-- Version/API conflicts or cross-platform constraints
-- Failing tests that require product choice (not purely technical)
-
-Exit protocol
-- On completion or timebox end, post:
-  - SUMMARY: one short paragraph
-  - CHANGES: bullet list of files touched/added/removed
-  - TESTS: minimal results summary
-  - NEXT: requested review points or next steps
-- Then await feedback.
-
-Plan template (pre-silence)
-- Objective: <single sentence>
-- Steps: <3–7 bullets>
-- Outputs: PATCH/NEW FILE/DELETE FILE/TEST/COMMIT
-- Timebox: <e.g., 45m>
-
-Deliverable templates (during silence)
-- PATCH path/to/file.ext
-
-```diff
-<unified diff>
-```
-
-- NEW FILE path/to/file.ext
-
-```<lang>
-<full contents>
-```
-
-- DELETE FILE path/to/file.ext
-- TEST
-- COMMIT
-<subject line>
-<optional body>
-
-## AI Agent Command Execution Protocol
-
-**MANDATORY FOR ALL AI AGENTS**: When you need to execute console commands, terminal operations, or shell scripts:
-
-### Script-First Execution Rule
-
-1. **NEVER request approval for individual commands**
-2. **ALWAYS create executable PowerShell scripts** in `.copilot-scripts/` directory
-3. **Execute scripts immediately** without user interaction
-4. **Use descriptive naming**: `build-*.ps1`, `test-*.ps1`, `check-*.ps1`, `validate-*.ps1`, `fix-*.ps1`
-
-### Script Template Pattern:
-
-```powershell
-# .copilot-scripts/{action}-{target}.ps1
-# Description: Brief explanation of what this script does
-
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  {SCRIPT PURPOSE}" -ForegroundColor Green
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
-
-# Command 1
-Write-Host "Step 1: {Description}" -ForegroundColor Yellow
-{command-here}
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "❌ Failed at Step 1" -ForegroundColor Red
-    exit 1
-}
-Write-Host "✓ Step 1 complete" -ForegroundColor Green
-Write-Host ""
-
-# Command 2
-Write-Host "Step 2: {Description}" -ForegroundColor Yellow
-{command-here}
-Write-Host "✓ Step 2 complete" -ForegroundColor Green
-
-Write-Host ""
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "  ALL STEPS COMPLETED ✓" -ForegroundColor Green
-Write-Host "========================================" -ForegroundColor Cyan
-```
-
-### Execution Pattern:
-
-```powershell
-# Create script, then execute immediately:
-pwsh -ExecutionPolicy Bypass -File ".copilot-scripts/{script-name}.ps1"
-```
-
-### Benefits:
-
-- ✅ **No approval prompts** - Immediate execution
-- ✅ **Complex commands supported** - Pipelines, variables, conditionals
-- ✅ **Reusable** - Scripts persist for re-running
-- ✅ **Git-ignored** - Automatically excluded from commits
-- ✅ **Better logging** - Structured output with color coding
-- ✅ **Error handling** - Proper exit codes and failure detection
-
-## Priority Guidelines for GitHub Copilot
-
-When generating code for this repository, **ALWAYS** follow this priority order:
-
-1. **Script-First Execution**: Create executable scripts in `.copilot-scripts/` instead of requesting command approval
-2. **Version Compatibility**: Detect and respect the exact versions of languages, frameworks, and libraries defined in `Directory.Packages.props` and `.csproj` files. Never use features beyond detected versions.
-3. **Codebase Patterns**: Scan existing code for established patterns before generating new code. Consistency with existing code takes precedence over external best practices.
-4. **Constitutional Principles**: Follow `.specify/memory/constitution.md` - these principles are non-negotiable.
-5. **Spec-Driven Context**: Reference feature specifications in `.specify/features/` for requirements and implementation guidance.
-6. **Code Quality**: Prioritize maintainability, performance, security, accessibility, and testability in all generated code.
-
-## Technology Version Detection (MANDATORY)
-
-Before generating ANY code, scan the codebase to identify exact versions:
-
-### Language & Framework Versions
-- **Language**: C# with `<LangVersion>latest</LangVersion>` targeting .NET 9.0 (`<TargetFramework>net9.0</TargetFramework>`)
-- **Nullable Reference Types**: ENABLED (`<Nullable>enable</Nullable>`) - ALL projects require explicit nullability annotations
-- **Avalonia UI**: Version **11.3.6** (`Directory.Packages.props`) - Use only Avalonia 11.x features
-- **MVVM Toolkit**: CommunityToolkit.Mvvm **8.4.0** - Use source generators (`[ObservableProperty]`, `[RelayCommand]`)
-- **Compiled Bindings**: DEFAULT (`<AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>`)
-
-### Key Package Versions (from Directory.Packages.props)
-
-```xml
-Avalonia: 11.3.6
-CommunityToolkit.Mvvm: 8.4.0
-Microsoft.Extensions.DependencyInjection: 9.0.0
-Serilog.Extensions.Logging: 8.0.0
-Polly: 8.4.2
-AutoMapper: 13.0.1
-FluentValidation: 11.10.0
-MySql.Data: 9.0.0
-K4os.Compression.LZ4: 1.3.8
-xUnit: 2.9.2
-NSubstitute: 5.1.0
-FluentAssertions: 6.12.1
-```
-
-**CRITICAL**: Never suggest features, APIs, or syntax not available in these exact versions.
-
-## Codebase Scanning Instructions
-
-When generating or modifying code:
-
-1. **Find Similar Files**: Locate files similar to the one being created/modified (same layer, similar purpose)
-2. **Analyze Patterns**: Extract patterns for:
-   - Naming conventions (classes, methods, properties, fields)
-   - File organization and structure
-   - Error handling approaches
-   - Logging patterns
-   - Documentation style
-   - Testing patterns
-   - Dependency injection usage
-3. **Follow Consistency**: Use the most consistent patterns found in the codebase
-4. **Prioritize Recent Code**: When conflicting patterns exist, prefer patterns in newer files or files with higher test coverage
-5. **Never Introduce New Patterns**: Do NOT introduce patterns not found in existing codebase without explicit approval
-
-## Spec-Driven Development Context
-
-This project uses **GitHub Spec Kit** for Spec-Driven Development (SDD).
-
-### Spec-Kit Workflow Commands
-When working with specifications, always reference:
-- `/constitution` - Project principles and guidelines
-- `/specify` - Feature specification creation
-- `/clarify` - De-risk ambiguous areas before planning
-- `/plan` - Technical implementation plans
-- `/tasks` - Generate actionable task lists
-- `/analyze` - Cross-artifact consistency analysis
-- `/implement` - Execute implementation
-
-### Spec-Kit Directory Structure
-- `.specify/features/` - All feature specifications (SPEC_*.md, PLAN_*.md, TASKS_*.md)
-- `.specify/templates/` - Command templates
-- `memory/constitution.md` - Project governing principles
-- `scripts/bash/` - Shell scripts for spec operations
-- `scripts/powershell/` - PowerShell scripts for spec operations
-
-### Script Execution Rules
-- Scripts **always** run from repository root
-- Scripts output **JSON** with file paths and branch names
-- **Always parse JSON output** before using paths or proceeding with implementation
-- Example: `create-new-feature.sh --json "{ARGS}"` returns `{"BRANCH_NAME": "...", "SPEC_FILE": "..."}`
+Auto-generated from all feature plans. Last updated: 2025-10-10
 
 ## Active Technologies
-- Language/Runtime: C# (LangVersion latest) on .NET 9.0 with Nullable enabled (002-environment-and-configuration)
-- UI/MVVM: Avalonia UI 11.3.6 with CompiledBindings by default; CommunityToolkit.Mvvm 8.4.0 (source generators) (002-environment-and-configuration)
-- DI/Logging/Observability: Microsoft.Extensions.DependencyInjection 9.0.0; Serilog.Extensions.Logging 8.0.0; OpenTelemetry (Jaeger optional) (002-environment-and-configuration)
-- Resilience/Mapping/Validation: Polly 8.4.2; AutoMapper 13.0.1; FluentValidation 11.10.0 (002-environment-and-configuration)
-- Database/Security: MySql.Data 9.0.0 against MAMP MySQL 5.7 (UserPreferences, FeatureFlags); OS-native secure storage (DPAPI/KeyStore) (002-environment-and-configuration)
-- Caching/Compression: K4os.Compression.LZ4 1.3.8 for local cache (002-environment-and-configuration)
-- Testing: xUnit 2.9.2; NSubstitute 5.1.0; FluentAssertions 6.12.1 (002-environment-and-configuration)
+- .NET 8.0 + Avalonia UI 11.3.4 + MVVM Community Toolkit 8.3.2 + MySQL 5.7 (MySql.Data 9.4.0)
+- GitHub Copilot VS Code Extension with comprehensive configuration system
 
-### Core Stack (001-boot-sequence-splash)
-- **Framework**: C# .NET 9.0 with nullable reference types enabled
-- **UI Framework**: Avalonia 11.3+
-- **MVVM Toolkit**: CommunityToolkit.Mvvm 8.3+
-- **Database**: MySQL.Data (MAMP MySQL 5.7)
-- **Observability**: Serilog + OpenTelemetry
-- **Resilience**: Polly
-- **Mapping**: AutoMapper
-- **Validation**: FluentValidation
-- **Compression**: LZ4 for local cache
-- **Security**: OS-native credential storage
+## Core Instruction Files
 
-### Data Sources
-- MySQL 5.7 (MAMP) - Local database
-  - **Schema Documentation**: `.github/mamp-database/schema-tables.json` (single source of truth)
-  - **Connection Info**: `.github/mamp-database/connection-info.json`
-  - **Stored Procedures**: `.github/mamp-database/stored-procedures.json`
-  - **Functions**: `.github/mamp-database/functions.json`
-  - **Views**: `.github/mamp-database/views.json`
-  - **Indexes**: `.github/mamp-database/indexes.json`
-  - **Sample Data**: `.github/mamp-database/sample-data.json`
-  - **Migration History**: `.github/mamp-database/migrations-history.json`
-- Visual ERP - Read-only via API Toolkit
-- Local cache with LZ4 compression
+GitHub Copilot automatically includes these instruction files for all code generation:
 
-**CRITICAL**: Always reference `.github/mamp-database/schema-tables.json` before writing database-related code. Use exact table/column names (case-sensitive: `Users`, `UserId`, `PreferenceKey`).
+- #file:instructions/Framework/csharp-dotnet8.instructions.md
+- #file:instructions/Framework/avalonia-ui.instructions.md
+- #file:instructions/Framework/mvvm-community-toolkit.instructions.md
+- #file:instructions/Services/DataLayer/mysql-database.instructions.md
+- #file:instructions/Testing/testing-standards.instructions.md
+- #file:instructions/Development/documentation.instructions.md
+- #file:instructions/Quality/security-best-practices.instructions.md
+- #file:instructions/Quality/performance-optimization.instructions.md
+- #file:instructions/Quality/code-review-standards.instructions.md
 
-## Context Files Priority
+## Memory Files
 
-When generating code, consult these files in order:
+Persistent lessons learned from MTM development:
 
-1. **`.specify/features/`** - Feature specifications with requirements and acceptance criteria
-2. **`.specify/memory/constitution.md`** - Project governing principles (non-negotiable)
-3. **`.github/copilot-instructions.md`** - This file (project-wide standards)
-4. **`.github/instructions/*.instructions.md`** - Domain-specific pattern guides
-5. **Existing codebase** - Similar files in the same layer/domain
+- #file:memory/avalonia-ui-patterns.md
+- #file:memory/database-patterns.md
+- #file:memory/mvvm-patterns.md
+- #file:memory/testing-patterns.md
+
+## Available Prompts
+
+Use these prompts with `/` command prefix for rapid component scaffolding:
+
+- `/setup-viewmodel` - Generate new ViewModel with MVVM Community Toolkit patterns
+- `/setup-view` - Generate new Avalonia AXAML View with Theme V2 integration
+- `/setup-service` - Generate new service with DI and logging
+- `/setup-custom-control` - Generate Avalonia custom control
+- `/database-operation` - Generate stored procedure execution code
+- `/refactor-code` - Refactor code following MTM patterns
+- `/generate-docs` - Generate XML comments and documentation
+- `/debug-issue` - Debug workflow guidance
+- `/write-tests` - Generate manual validation test scenarios
+- `/create-stored-procedure` - Generate MySQL 5.7 stored procedure
+
+## Available Chatmodes
+
+Activate specialized chatmodes for context-aware assistance:
+
+- **MTM Architect** - Architecture planning and service design
+- **MTM Code Reviewer** - Pattern compliance checking
+- **MTM Debugger** - Avalonia and MVVM troubleshooting
+- **MTM Manufacturing Expert** - Manufacturing domain guidance
+- **MTM Specify Integrator** - .specify workflow integration
 
 ## Project Structure
-
 ```
-MTM_Avalonia_Template/
-├── .specify/
-│   ├── features/           # Feature specs, plans, tasks
-│   ├── templates/          # Command templates
-│   └── memory/
-│       └── constitution.md # Project principles
-├── src/
-│   ├── MTM_Avalonia_Template/          # Main Avalonia app
-│   │   ├── ViewModels/                 # MVVM ViewModels
-│   │   ├── Views/                      # Avalonia XAML views
-│   │   ├── Models/                     # Domain models
-│   │   ├── Services/                   # Business logic & API clients
-│   │   ├── Infrastructure/             # Database, caching, logging
-│   │   ├── App.axaml                   # Application entry
-│   │   └── Program.cs                  # Entry point
-│   └── MTM_Avalonia_Template.Core/     # Shared/core logic (if needed)
-├── tests/
-│   ├── MTM_Avalonia_Template.Tests/    # Unit tests
-│   └── MTM_Avalonia_Template.IntegrationTests/
-├── scripts/
-│   ├── bash/               # Linux/macOS scripts
-│   └── powershell/         # Windows scripts
-└── .github/
-    └── copilot-instructions.md
+src/
+  ViewModels/          # MVVM ViewModels with CommunityToolkit
+  Views/               # Avalonia AXAML views
+  Models/              # Data models and DTOs
+  Services/            # Business logic services
+  Controls/            # Custom Avalonia controls
+  Converters/          # Value converters
+  Behaviors/           # Avalonia behaviors
+  Resources/Themes/    # Theme V2 system (17 theme files)
+.github/
+  instructions/        # Core instruction files (9 files)
+  prompts/             # Reusable prompts (10 files)
+  chatmodes/           # Specialized chatmodes (5 files)
+  memory/              # Persistent lessons (4 files)
+  workflows/           # CI/CD automation
+specs/                 # Feature specifications (.specify workflow)
+.specify/              # Specification system templates
 ```
 
-## Technology-Specific Guidelines
+## Commands
 
-### .NET 9.0 & C# Latest Guidelines
+### Build and Run
+```powershell
+# Restore dependencies
+dotnet restore
 
-**CRITICAL**: This project uses .NET 9.0 with C# latest features. Always:
-- Detect `<TargetFramework>net9.0</TargetFramework>` before generating code
-- Use `<LangVersion>latest</LangVersion>` features appropriate for .NET 9.0
-- Respect `<Nullable>enable</Nullable>` - ALL reference types must have explicit nullability
-- Never use APIs introduced after .NET 9.0
+# Build application
+dotnet build
 
-**Patterns to Follow** (scan codebase for examples):
-- LINQ usage patterns (prefer method syntax for complex queries)
-- Async/await patterns (always include `CancellationToken`)
-- Dependency injection patterns (constructor injection)
-- Collection types (prefer `List<T>`, `Dictionary<TKey, TValue>` over arrays)
-- Exception handling (use specific exception types, structured logging)
-
-### Avalonia 11.3.6 UI Framework Guidelines
-
-**CRITICAL**: This project uses Avalonia 11.3.6 with CompiledBindings enabled by default.
-
-**Mandatory XAML Patterns**:
-- **ALWAYS** use `x:DataType` on Window/UserControl root elements
-- **ALWAYS** use `{CompiledBinding}` syntax (NEVER `{Binding}` or `{ReflectionBinding}`)
-- **ALWAYS** set `x:CompileBindings="True"` on root elements (already default, but be explicit)
-- **ALWAYS** include `Design.DataContext` for design-time support
-
-**Scan for Examples**: Look at existing `.axaml` files in `Views/` directory for:
-- Namespace declarations (`xmlns:vm="using:MTM_Template_Application.ViewModels"`)
-- Binding syntax patterns
-- Layout control usage (Grid, StackPanel, DockPanel)
-- Style application patterns
-- Resource reference patterns
-
-### CommunityToolkit.Mvvm 8.4.0 Guidelines
-
-**CRITICAL**: Use ONLY CommunityToolkit.Mvvm patterns (NEVER ReactiveUI).
-
-**Mandatory Patterns**:
-- `[ObservableProperty]` for all bindable properties (generates property with notification)
-- `[RelayCommand]` for all commands (generates ICommand implementation)
-- `partial class` modifier required for source generators
-- Inherit from `ObservableObject` or `ObservableRecipient`
-- Use `[NotifyCanExecuteChangedFor(nameof(CommandName))]` for command enablement
-
-**Scan for Examples**: Look at existing ViewModels in `ViewModels/` directory for:
-- Property declaration patterns
-- Command implementation patterns
-- Constructor injection patterns
-- Validation integration patterns
-
-## Code Style & Standards
-
-### C# .NET 9.0 Conventions
-
-#### Nullable Reference Types
-- **Required**: All projects have nullable reference types enabled
-- Always use `?` for nullable reference types
-- Use `!` null-forgiving operator only when you're certain (avoid when possible)
-- Prefer null-conditional operators: `?.`, `??`, `??=`
-
-```csharp
-// ✅ Good
-public class UserService
-{
-    private readonly ILogger<UserService>? _logger;
-
-    public async Task<User?> GetUserAsync(string? userId)
-    {
-        if (string.IsNullOrWhiteSpace(userId))
-            return null;
-
-        var user = await _repository.FindAsync(userId);
-        _logger?.LogInformation("Retrieved user {UserId}", userId);
-        return user;
-    }
-}
-
-// ❌ Bad
-public async Task<User> GetUserAsync(string userId)
-{
-    return await _repository.FindAsync(userId)!; // Avoid !
-}
+# Run in development mode
+dotnet run
 ```
 
-#### MVVM with CommunityToolkit.Mvvm
-- Use `[ObservableProperty]` for bindable properties
-- Use `[RelayCommand]` for commands (supports async with `[RelayCommand(CanExecute = nameof(MethodName))]`)
-- ViewModels inherit from `ObservableObject` or `ObservableRecipient`
-- Use `partial` classes for source generators
-- Commands automatically support `CanExecute` when suffixed with `CanExecuteMethodName`
-
-```csharp
-// ✅ Good - Modern CommunityToolkit.Mvvm pattern
-public partial class MainViewModel : ObservableObject
-{
-    [ObservableProperty]
-    private string? _userName;
-
-    [ObservableProperty]
-    private bool _isLoading;
-
-    [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(LoadDataCommand))]
-    private bool _canLoad = true;
-
-    [RelayCommand(CanExecute = nameof(CanLoadData))]
-    private async Task LoadDataAsync(CancellationToken cancellationToken)
-    {
-        IsLoading = true;
-        CanLoad = false;
-        try
-        {
-            // Load data with cancellation support
-            await Task.Delay(1000, cancellationToken);
-        }
-        finally
-        {
-            IsLoading = false;
-            CanLoad = true;
-        }
-    }
-
-    private bool CanLoadData() => CanLoad && !IsLoading;
-}
+### Database (MAMP MySQL 5.7)
+```
+Server: localhost:3306
+Database: mtm_wip_application
+Username: root
+Password: root
+Connection String: Server=localhost;Database=mtm_wip_application;SslMode=none;AllowPublicKeyRetrieval=true;
 ```
 
-#### Avalonia XAML Conventions (CRITICAL)
-
-**Always use CompiledBinding** - This is the recommended and performant approach:
-
-```xml
-<!-- ✅ CORRECT - Use x:DataType and CompiledBinding -->
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:MTM_Avalonia_Template.ViewModels"
-        x:Class="MTM_Avalonia_Template.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        x:CompileBindings="True"
-        Design.Width="800" Design.Height="450">
-
-    <StackPanel>
-        <TextBlock Text="{CompiledBinding UserName}" />
-        <Button Content="Load" Command="{CompiledBinding LoadDataCommand}" />
-        <ProgressBar IsVisible="{CompiledBinding IsLoading}" />
-    </StackPanel>
-</Window>
-
-<!-- ❌ WRONG - Don't use Binding without x:CompileBindings -->
-<TextBlock Text="{Binding UserName}" />
-
-<!-- ⚠️ Only use ReflectionBinding if absolutely necessary (slower, runtime errors) -->
-<TextBlock Text="{ReflectionBinding UserName}" />
+### Testing
+```powershell
+# Manual validation approach
+# See testing-standards.instructions.md for success criteria patterns
 ```
 
-**Key Avalonia XAML Rules:**
-- **Always** set `x:DataType` on Window/UserControl root
-- **Always** set `x:CompileBindings="True"` for compile-time binding validation
-- Use `CompiledBinding` syntax (Avalonia 11.0+)
-- Use `Design.DataContext` for design-time preview
-- Use `Design.Width` and `Design.Height` for previewer
+## Code Style
 
-```xml
-<!-- ✅ Complete example with design-time support -->
-<UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="using:MTM_Avalonia_Template.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MTM_Avalonia_Template.Views.MainView"
-             x:DataType="vm:MainViewModel"
-             x:CompileBindings="True">
-    <Design.DataContext>
-        <vm:MainViewModel />
-    </Design.DataContext>
+- **C# .NET 8**: Follow csharp-dotnet8.instructions.md patterns
+- **MVVM**: Use MVVM Community Toolkit 8.3.2 attributes ([ObservableObject], [ObservableProperty], [RelayCommand])
+- **Avalonia UI**: Follow avalonia-ui.instructions.md with Theme V2 system
+- **MySQL**: Use stored procedures with Helper_Database_StoredProcedure patterns
+- **Testing**: Manual validation with success criteria (see testing-standards.instructions.md)
 
-    <Grid RowDefinitions="Auto,*">
-        <TextBlock Grid.Row="0" Text="{CompiledBinding Title}" />
-        <ListBox Grid.Row="1" ItemsSource="{CompiledBinding Items}" />
-    </Grid>
-</UserControl>
-```
+## .specify Workflow Integration
 
-#### Avalonia Styles & Resources
-- Define styles in separate `.axaml` files
-- Use `StyleInclude` to import styles
-- Follow Avalonia's resource dictionary conventions
+This project uses the .specify workflow for feature development with constitutional principles and comprehensive templates:
 
-```xml
-<!-- App.axaml -->
-<Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="MTM_Avalonia_Template.App">
-    <Application.Styles>
-        <FluentTheme />
-        <StyleInclude Source="/Styles/CustomStyles.axaml" />
-    </Application.Styles>
-</Application>
-```
+### Workflow Steps
 
-#### Async/Await Patterns
-- Always use `async`/`await` for I/O operations
-- Use `ConfigureAwait(false)` in library code (not UI code)
-- Suffix async methods with `Async`
-- Use `ValueTask<T>` for hot paths when appropriate
-- **Always** provide `CancellationToken` parameters for async operations
+1. **Specification**: `/speckit.specify` - Define feature requirements using structured templates
+2. **Clarification**: `/speckit.clarify` - Resolve ambiguities through interactive Q&A
+3. **Planning**: `/speckit.plan` - Create technical plan with architecture decisions
+4. **Tasks**: `/speckit.tasks` - Generate detailed task breakdown with dependencies
+5. **Implementation**: `/speckit.implement` - Execute tasks systematically with progress tracking
 
-```csharp
-// ✅ Good - Proper async pattern with cancellation
-public async Task<List<Order>> GetOrdersAsync(CancellationToken cancellationToken = default)
-{
-    using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-    cts.CancelAfter(TimeSpan.FromSeconds(30));
+### Integration with GitHub Copilot Configuration
 
-    return await _httpClient
-        .GetFromJsonAsync<List<Order>>("/api/orders", cts.Token)
-        .ConfigureAwait(false);
-}
+The .specify workflow leverages this GitHub Copilot configuration system:
 
-// ❌ Bad - No cancellation support
-public async Task<List<Order>> GetOrdersAsync()
-{
-    return await _httpClient.GetFromJsonAsync<List<Order>>("/api/orders");
-}
-```
+- **Instruction Files**: Automatically applied during implementation to ensure pattern compliance
+- **Memory Files**: Referenced during planning to incorporate lessons learned
+- **Prompts**: Available for rapid component generation during implementation phase
+- **Chatmodes**: Specialized assistance modes activate during specification, planning, and implementation
+- **MTM Specify Integrator Chatmode**: Dedicated guidance for .specify workflow execution
 
-#### Dependency Injection (Avalonia-specific)
-- Register services in `Program.cs` using the `AppBuilder`
-- Use constructor injection
-- Use interfaces for testability
+### Constitutional Principles
 
-```csharp
-// ✅ Good - Program.cs with DI setup
-public static AppBuilder BuildAvaloniaApp()
-{
-    return AppBuilder.Configure<App>()
-        .UsePlatformDetect()
-        .LogToTrace()
-        .WithInterFont()
-        .ConfigureServices(services =>
-        {
-            // Register ViewModels
-            services.AddTransient<MainViewModel>();
-            services.AddTransient<SettingsViewModel>();
+The .specify workflow follows these constitutional principles:
 
-            // Register Services
-            services.AddSingleton<IOrderService, OrderService>();
-            services.AddSingleton<ILogger<OrderService>>(
-                LoggerFactory.Create(b => b.AddSerilog()).CreateLogger<OrderService>()
-            );
-        });
-}
-```
+1. **Requirements First**: All features begin with clear specifications in `specs/[feature]/spec.md`
+2. **Research-Driven Planning**: Technical plans incorporate research from documentation, repositories, and existing patterns
+3. **Task-Based Implementation**: Execution follows detailed task breakdowns with dependency tracking
+4. **Progress Transparency**: Tasks marked complete as implemented, providing clear status visibility
+5. **Validation Checkpoints**: Success criteria defined upfront, validation executed post-implementation
 
-#### Error Handling with Polly
-- Use retry policies for transient failures
-- Use circuit breakers for cascading failures
-- Log all retry attempts with Serilog
+### Template System
 
-```csharp
-// ✅ Good
-private static readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy =
-    Policy<HttpResponseMessage>
-        .Handle<HttpRequestException>()
-        .OrResult(r => !r.IsSuccessStatusCode)
-        .WaitAndRetryAsync(
-            retryCount: 3,
-            sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-            onRetry: (outcome, timespan, retryCount, context) =>
-            {
-                Log.Warning("Retry {RetryCount} after {Delay}ms", retryCount, timespan.TotalMilliseconds);
-            });
-```
+Available templates in `.specify/templates/`:
 
-#### Logging with Serilog (Avalonia Context)
-- Use structured logging
-- Log to file and console for desktop apps
-- Include correlation IDs for distributed tracing
+- **spec.md**: User stories, acceptance criteria, success criteria, research findings
+- **plan.md**: Architecture decisions, technical approach, dependency analysis
+- **tasks.md**: Detailed task breakdown with phase organization and parallel execution markers
+- **validation.md**: Comprehensive validation checklists with measurable success targets
+- **migration.md**: Migration strategies, archive plans, rollback procedures
 
-```csharp
-// ✅ Good - Serilog configuration for Avalonia
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .WriteTo.Console()
-    .WriteTo.File("logs/app-.txt", rollingInterval: RollingInterval.Day)
-    .Enrich.FromLogContext()
-    .Enrich.WithProperty("Application", "MTM_Avalonia_Template")
-    .CreateLogger();
+### Cross-References
 
-_logger.LogInformation(
-    "Processing order {OrderId} for customer {CustomerId}",
-    orderId,
-    customerId
-);
-```
+- **Specification Phase**: Reference memory files for lessons learned, instruction files for current patterns
+- **Planning Phase**: Leverage MTM Architect chatmode for architecture guidance
+- **Implementation Phase**: Use component generation prompts (`/setup-viewmodel`, `/setup-view`, etc.)
+- **Validation Phase**: Apply testing-standards.instructions.md and validation.md checklists
+- **Review Phase**: Activate MTM Code Reviewer chatmode for pattern compliance checking
 
-#### Validation with FluentValidation
-- Create validator classes for DTOs/models
-- Use async validation when needed
-- Chain validation rules
-
-```csharp
-// ✅ Good
-public class OrderValidator : AbstractValidator<Order>
-{
-    public OrderValidator()
-    {
-        RuleFor(x => x.OrderId)
-            .NotEmpty()
-            .WithMessage("Order ID is required");
-
-        RuleFor(x => x.Amount)
-            .GreaterThan(0)
-            .WithMessage("Amount must be positive");
-
-        RuleFor(x => x.CustomerEmail)
-            .EmailAddress()
-            .WithMessage("Valid email required");
-    }
-}
-```
-
-### Database (MySQL)
-- Use parameterized queries **always** (prevent SQL injection)
-- Use transactions for multi-step operations
-- Close connections properly (use `using` statements)
-- Connection strings stored in OS-native credential storage
-- Use async methods: `OpenAsync()`, `ExecuteReaderAsync()`, etc.
-
-```csharp
-// ✅ Good
-await using var connection = new MySqlConnection(_connectionString);
-await connection.OpenAsync(cancellationToken);
-
-await using var command = new MySqlCommand(
-    "SELECT * FROM orders WHERE customer_id = @customerId",
-    connection
-);
-command.Parameters.AddWithValue("@customerId", customerId);
-
-await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-```
-
-### Testing Standards
-- Unit tests for business logic and ViewModels
-- Integration tests for API/database operations
-- Use **xUnit** (recommended for .NET)
-- Mock external dependencies with **NSubstitute** or Moq
-- Aim for >80% code coverage on critical paths
-- Test ViewModels without UI dependencies
-
-```csharp
-// ✅ Good - ViewModel unit test
-public class MainViewModelTests
-{
-    [Fact]
-    public async Task LoadDataCommand_ShouldSetIsLoading()
-    {
-        // Arrange
-        var mockService = Substitute.For<IDataService>();
-        var viewModel = new MainViewModel(mockService);
-
-        // Act
-        await viewModel.LoadDataCommand.ExecuteAsync(null);
-
-        // Assert
-        Assert.False(viewModel.IsLoading); // Should be false after completion
-    }
-}
-```
-
-## Avalonia-Specific Best Practices
-
-### Performance Optimization
-- Use `VirtualizingStackPanel` for large lists
-- Use `ItemsRepeater` for custom virtualization
-- Avoid binding to complex properties in tight loops
-- Use `x:CompileBindings` for compile-time validation and performance
-
-### Cross-Platform Considerations
-- Test on Windows, Linux, and macOS
-- Use `RuntimeInformation.IsOSPlatform()` for platform-specific code
-- Use Avalonia's platform abstractions (don't P/Invoke directly)
-
-```csharp
-// ✅ Good - Platform detection
-if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-{
-    // Windows-specific code
-}
-else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-{
-    // Linux-specific code
-}
-```
-
-### Avalonia Community Packages
-Consider using these vetted packages:
-- `Avalonia.Controls.DataGrid` - Official DataGrid control
-- `Avalonia.Controls.TreeDataGrid` - TreeView + DataGrid hybrid
-- `AvaloniaEdit` - Code/text editor control
-- `Avalonia.Xaml.Behaviors` - Behaviors library (like WPF)
-- `Material.Avalonia` or `Citrus.Avalonia` - Material/Fluent themes
-
-## Recent Changes
-- 002-environment-and-configuration: Added C# .NET 9.0 with nullable reference types enabled
-- 002-environment-and-configuration: Added C# .NET 9.0 with nullable reference types enabled
-- 002-environment-and-configuration: Added C# .NET 9.0 with nullable reference types enabled
-
-## Performance Guidelines
-- Use LZ4 compression for cached data
-- Implement connection pooling for MySQL
-- Use `IMemoryCache` for frequently accessed data
-- Profile with dotMemory/dotTrace before optimizing
-- Use CompiledBinding (not ReflectionBinding) for best XAML performance
-
-## Security Guidelines
-- Store credentials in OS-native storage (Windows Credential Manager, macOS Keychain, Linux Secret Service)
-- Never log sensitive data (passwords, tokens, PII)
-- Validate all user inputs with FluentValidation
-- Use HTTPS for all external API calls
-- Implement rate limiting for API endpoints
-
-## Boot Sequence Patterns (Feature 001)
-
-### Three-Stage Boot Architecture
-The application uses a strict three-stage boot sequence managed by `BootOrchestrator`:
-
-```csharp
-// Stage 0: Splash Screen (10s timeout)
-await orchestrator.ExecuteStage0Async();
-
-// Stage 1: Core Services (60s timeout, <3s target)
-await orchestrator.ExecuteStage1Async();
-
-// Stage 2: Application Ready (15s timeout)
-await orchestrator.ExecuteStage2Async();
-```
-
-### Service Registration Pattern
-All services use extension methods for clean DI registration:
-
-```csharp
-public static IServiceCollection AddBootServices(this IServiceCollection services)
-{
-    services.AddSingleton<IBootOrchestrator, BootOrchestrator>();
-    services.AddTransient<IBootStage, Stage0Bootstrap>();
-    return services;
-}
-```
-
-### Platform-Specific Services
-Use factory pattern for platform-dependent services:
-
-```csharp
-public static ISecretsService Create(ILoggerFactory loggerFactory)
-{
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-        return new WindowsSecretsService(loggerFactory.CreateLogger<WindowsSecretsService>());
-    if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-        return new MacOSSecretsService(loggerFactory.CreateLogger<MacOSSecretsService>());
-    return new AndroidSecretsService(loggerFactory.CreateLogger<AndroidSecretsService>());
-}
-```
-
-### Performance Budgets
-- Total boot time: <10 seconds
-- Stage 1 (services): <3 seconds
-- Memory usage: <100MB (40MB cache + 30MB services + 30MB framework)
-
-### Error Handling Pattern
-Always use comprehensive error categorization:
-
-```csharp
-try
-{
-    await service.InitializeAsync(cancellationToken);
-}
-catch (OperationCanceledException)
-{
-    _logger.LogWarning("Operation cancelled");
-    // Clean shutdown
-}
-catch (Exception ex)
-{
-    var category = _errorCategorizer.Categorize(ex);
-    var recovery = _recoveryStrategy.DetermineAction(category);
-    // Show user-friendly error with recovery options
-}
-```
-
-## Workflow: Creating New Features
-
-When creating new features, follow this strict order:
-
-1. **Scan for Similar Features**: Find existing features in `.specify/features/` with similar requirements
-2. **Check Constitution**: Reference `.specify/memory/constitution.md` for non-negotiable principles
-3. **Run Spec-Kit Commands**:
-   - `/specify` - Create feature specification
-   - `/clarify` - Resolve ambiguities before planning
-   - `/plan` - Generate technical implementation plan
-   - `/tasks` - Break down into actionable tasks
-   - `/analyze` - Verify consistency before implementation
-   - `/implement` - Execute implementation
-4. **Parse JSON Output**: ALWAYS parse script JSON output before using file paths
-5. **Scan Existing Code**: Find similar files and extract patterns before writing code
-6. **Follow MVVM Pattern**: Model → Service → ViewModel → View (with proper DI)
-7. **Use TDD**: Write tests before implementation (see existing test patterns)
-8. **Validate Implementation**: Run validation scripts before PR
-9. **Update Documentation**: Add patterns to this file if introducing new approaches
-
-## Pattern-First Code Generation
-
-Before generating ANY code:
-
-1. **Identify the layer**: ViewModel, Service, Model, View, Infrastructure?
-2. **Find 2-3 similar files**: Same layer, similar purpose
-3. **Extract patterns**:
-   - File/class naming convention
-   - Constructor injection pattern
-   - Error handling approach
-   - Logging style and detail level
-   - Async pattern usage
-   - Null handling approach
-   - Test coverage style
-4. **Apply patterns consistently**: Match the established patterns exactly
-5. **Validate against conventions**: Ensure nullable annotations, cancellation tokens, etc.
-
-## Common Pitfalls to Avoid
-
-### CRITICAL (Will Break Build or Runtime)
-- ❌ **Don't use `{Binding}` without `x:CompileBindings`** - always use `{CompiledBinding}`
-- ❌ Don't forget `x:DataType` on root XAML elements (build error with CompiledBindings)
-- ❌ Don't use APIs not available in detected versions (e.g., .NET 10 features in .NET 9)
-- ❌ Don't use ReactiveUI patterns (use CommunityToolkit.Mvvm only)
-- ❌ Don't block async code with `.Result` or `.Wait()` (deadlock risk)
-
-### HIGH (Violates Project Standards)
-- ❌ Don't use `!` null-forgiving operator without clear justification (nullable violations)
-- ❌ Don't mix UI logic in ViewModels (keep ViewModels testable, no Avalonia types)
-- ❌ Don't use string concatenation for SQL (use parameterized queries - security)
-- ❌ Don't ignore cancellation tokens in async methods (violates async patterns)
-- ❌ Don't catch generic `Exception` without rethrowing or logging (lose error context)
-
-### MEDIUM (Style/Consistency Issues)
-- ❌ Don't use `ConfigureAwait(false)` in UI code (only in libraries)
-- ❌ Don't introduce patterns not found in existing codebase (inconsistency)
-- ❌ Don't skip constructor null checks (`ArgumentNullException.ThrowIfNull`)
-- ❌ Don't hardcode strings that should be in configuration
-- ❌ Don't log sensitive data (passwords, tokens, PII)
-
-<!-- MANUAL ADDITIONS START -->
-## User: John Koll (GitHub Username: Dorotel)
-## Current Date: 2025-10-03
-
-## Additional Project Notes
-- MAMP MySQL runs on default port 3306
-- Visual ERP API Toolkit requires read-only access token
-- LZ4 compression ratio target: ~3:1 for cached JSON payloads
-- OpenTelemetry exports to local Jaeger instance (optional)
-- Avalonia version: 11.3+ (ensure latest stable)
-- Use FluentTheme or Material.Avalonia for theming
-
-### MAMP MySQL 5.7 CLI Access
-
-**Successful Connection Method**:
+### Example: Feature Development Flow
 
 ```powershell
-# Full path to MAMP MySQL client (mysql.exe not in PATH by default)
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -u root -p"root" -h 127.0.0.1 -P 3306
+# 1. Specify feature (creates specs/[feature]/spec.md)
+/speckit.specify "Add inventory export feature"
 
-# Connect to specific database
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -u root -p"root" -h 127.0.0.1 -P 3306 -D mtm_template_dev
+# 2. Clarify ambiguities (updates spec.md with Q&A)
+/speckit.clarify
 
-# Execute query directly (useful for scripts)
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -u root -p"root" -h 127.0.0.1 -P 3306 -D mtm_template_dev -e "SHOW TABLES;"
+# 3. Plan implementation (creates specs/[feature]/plan.md)
+/speckit.plan
+
+# 4. Generate tasks (creates specs/[feature]/tasks.md)
+/speckit.tasks
+
+# 5. Implement systematically (follows tasks.md, marks complete)
+/speckit.implement
+
+# During implementation, GitHub Copilot automatically applies:
+# - Instruction files for pattern compliance
+# - Memory files for lessons learned
+# - Component prompts for rapid scaffolding
+# - Specialized chatmodes for domain assistance
 ```
 
-**Connection Details**:
-- **Host**: 127.0.0.1 (localhost)
-- **Port**: 3306 (default)
-- **Username**: root (MAMP default)
-- **Password**: root (MAMP default - change in production!)
-- **Database**: mtm_template_dev (development database)
-- **Version**: MySQL 5.7.24
+See `.specify/templates/` for complete workflow documentation and constitutional principles.
 
-**Existing Tables** (Feature 002 already implemented):
-- `users` - User accounts (UserId, Username, DisplayName, IsActive, CreatedAt, LastLoginAt)
-- `userpreferences` - User-specific settings
-- `featureflags` - Feature flag configurations
+## Recent Changes
+- 001-setup-comprehensive-github: Comprehensive GitHub Copilot configuration system with 9 instruction files, 10 prompts, 5 chatmodes, 4 memory files, and CI/CD workflow
 
-**Important Notes**:
-- Password on command line shows security warning (use .my.cnf file or environment variable in production)
-- Table names are lowercase (MySQL on Windows is case-insensitive, but Linux/production may be case-sensitive)
-- Always use parameterized queries in C# code (never string concatenation)
-- Reference `.github/mamp-database/schema-tables.json` for exact schema before coding
-
+<!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

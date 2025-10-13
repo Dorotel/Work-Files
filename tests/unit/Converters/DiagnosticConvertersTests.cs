@@ -25,13 +25,13 @@ public class DiagnosticConvertersTests
         var memoryUsage = 50.0; // Below yellow threshold
 
         // Act
-        var result = converter.Convert(memoryUsage, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(memoryUsage, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(76, 175, 80)); // Green #4CAF50
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(76, 175, 80)); // Green #4CAF50
     }
 
     [Fact]
@@ -42,13 +42,13 @@ public class DiagnosticConvertersTests
         var memoryUsage = 80.0; // Between thresholds
 
         // Act
-        var result = converter.Convert(memoryUsage, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(memoryUsage, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(255, 235, 59)); // Yellow #FFEB3B
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(255, 235, 59)); // Yellow #FFEB3B
     }
 
     [Fact]
@@ -59,13 +59,13 @@ public class DiagnosticConvertersTests
         var memoryUsage = 100.0; // Above red threshold
 
         // Act
-        var result = converter.Convert(memoryUsage, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(memoryUsage, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(244, 67, 54)); // Red #F44336
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(244, 67, 54)); // Red #F44336
     }
 
     [Theory]
@@ -79,19 +79,19 @@ public class DiagnosticConvertersTests
         var converter = new MemoryUsageToColorConverter();
 
         // Act
-        var result = converter.Convert(memoryUsage, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(memoryUsage, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
+        result.Should().BeOfType<Color>();
 
-        var brush = (SolidColorBrush)result!;
+        var color = (Color)result!;
         if (memoryUsage < 70.0)
-            brush.Color.Should().Be(Color.FromRgb(76, 175, 80)); // Green
+            color.Should().Be(Color.FromRgb(76, 175, 80)); // Green
         else if (memoryUsage < 90.0)
-            brush.Color.Should().Be(Color.FromRgb(255, 235, 59)); // Yellow
+            color.Should().Be(Color.FromRgb(255, 235, 59)); // Yellow
         else
-            brush.Color.Should().Be(Color.FromRgb(244, 67, 54)); // Red
+            color.Should().Be(Color.FromRgb(244, 67, 54)); // Red
     }
 
     [Fact]
@@ -101,13 +101,13 @@ public class DiagnosticConvertersTests
         var converter = new MemoryUsageToColorConverter();
 
         // Act
-        var result = converter.Convert(null, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(null, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
     }
 
     [Fact]
@@ -115,10 +115,10 @@ public class DiagnosticConvertersTests
     {
         // Arrange
         var converter = new MemoryUsageToColorConverter();
-        var brush = new SolidColorBrush(Colors.Green);
+        var color = Colors.Green;
 
         // Act & Assert
-        var act = () => converter.ConvertBack(brush, typeof(double), null, _culture);
+        var act = () => converter.ConvertBack(color, typeof(double), null, _culture);
         act.Should().Throw<NotSupportedException>()
             .WithMessage("*one-way binding*");
     }
@@ -141,17 +141,17 @@ public class DiagnosticConvertersTests
         var converter = new BootStageToColorConverter();
 
         // Act
-        var result = converter.Convert(durationMs, typeof(SolidColorBrush), stageId, _culture);
+        var result = converter.Convert(durationMs, typeof(Color), stageId, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
 
         if (shouldBeGreen)
-            brush.Color.Should().Be(Color.FromRgb(76, 175, 80)); // Green #4CAF50
+            color.Should().Be(Color.FromRgb(76, 175, 80)); // Green #4CAF50
         else
-            brush.Color.Should().Be(Color.FromRgb(244, 67, 54)); // Red #F44336
+            color.Should().Be(Color.FromRgb(244, 67, 54)); // Red #F44336
     }
 
     [Theory]
@@ -164,13 +164,13 @@ public class DiagnosticConvertersTests
         var converter = new BootStageToColorConverter();
 
         // Act
-        var result = converter.Convert(durationMs, typeof(SolidColorBrush), stageId, _culture);
+        var result = converter.Convert(durationMs, typeof(Color), stageId, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(76, 175, 80)); // Green (at target is considered good)
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(76, 175, 80)); // Green (at target is considered good)
     }
 
     [Fact]
@@ -180,13 +180,13 @@ public class DiagnosticConvertersTests
         var converter = new BootStageToColorConverter();
 
         // Act
-        var result = converter.Convert(null, typeof(SolidColorBrush), "Stage0", _culture);
+        var result = converter.Convert(null, typeof(Color), "Stage0", _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
     }
 
     [Fact]
@@ -196,13 +196,13 @@ public class DiagnosticConvertersTests
         var converter = new BootStageToColorConverter();
 
         // Act
-        var result = converter.Convert(1000.0, typeof(SolidColorBrush), null, _culture);
+        var result = converter.Convert(1000.0, typeof(Color), null, _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(158, 158, 158)); // Gray #9E9E9E
     }
 
     [Fact]
@@ -212,13 +212,13 @@ public class DiagnosticConvertersTests
         var converter = new BootStageToColorConverter();
 
         // Act
-        var result = converter.Convert(5000.0, typeof(SolidColorBrush), "UnknownStage", _culture);
+        var result = converter.Convert(5000.0, typeof(Color), "UnknownStage", _culture);
 
         // Assert
         result.Should().NotBeNull();
-        result.Should().BeOfType<SolidColorBrush>();
-        var brush = (SolidColorBrush)result!;
-        brush.Color.Should().Be(Color.FromRgb(76, 175, 80)); // Green (unknown stages always pass)
+        result.Should().BeOfType<Color>();
+        var color = (Color)result!;
+        color.Should().Be(Color.FromRgb(76, 175, 80)); // Green (unknown stages always pass)
     }
 
     [Fact]
@@ -226,10 +226,10 @@ public class DiagnosticConvertersTests
     {
         // Arrange
         var converter = new BootStageToColorConverter();
-        var brush = new SolidColorBrush(Colors.Green);
+        var color = Colors.Green;
 
         // Act & Assert
-        var act = () => converter.ConvertBack(brush, typeof(double), "Stage0", _culture);
+        var act = () => converter.ConvertBack(color, typeof(double), "Stage0", _culture);
         act.Should().Throw<NotSupportedException>()
             .WithMessage("*one-way binding*");
     }
@@ -301,3 +301,4 @@ public class DiagnosticConvertersTests
 
     #endregion
 }
+

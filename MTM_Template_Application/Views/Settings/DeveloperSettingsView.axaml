@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+             xmlns:controls="using:MTM_Template_Application.Controls"
+             mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="450"
+             x:Class="MTM_Template_Application.Views.Settings.DeveloperSettingsView"
+             x:DataType="vm:DeveloperSettingsViewModel"
+             x:CompileBindings="True">
+
+    <Design.DataContext>
+        <vm:DeveloperSettingsViewModel />
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="16" Margin="0,0,0,16">
+            <!-- Category Header -->
+            <TextBlock Text="Developer Settings"
+                      FontSize="20"
+                      FontWeight="SemiBold"
+                      Margin="0,0,0,8" />
+
+            <TextBlock Text="Configure developer tools and debugging features"
+                      Foreground="{DynamicResource ThemeV2.Text.Secondary}"
+                      Margin="0,0,0,16" />
+
+            <!-- Debug Mode Setting -->
+            <controls:SettingRow SettingKey="Debug Mode">
+                <CheckBox IsChecked="{CompiledBinding DebugMode, Mode=TwoWay}"
+                         Content="Enable debug mode (verbose logging, extra diagnostics)" />
+            </controls:SettingRow>
+
+            <!-- Help Text -->
+            <Border Background="{DynamicResource ThemeV2.Surface.Tertiary}"
+                    BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    Padding="12"
+                    Margin="0,8,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Debug Mode Features:"
+                              FontWeight="SemiBold" />
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="• Verbose logging to file and console"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Extended error details in UI"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• Performance metrics in Debug Terminal"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                        <TextBlock Text="• API request/response tracing"
+                                  Foreground="{DynamicResource ThemeV2.Text.Secondary}" />
+                    </StackPanel>
+                    <TextBlock Text="⚠️ Debug mode may impact performance - use for development only"
+                              Foreground="{DynamicResource ThemeV2.Status.Warning}"
+                              Margin="0,8,0,0" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

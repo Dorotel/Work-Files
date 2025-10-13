@@ -880,7 +880,7 @@ dotnet test
 ### Theme V2 Semantic Tokens
 
 ```xml
-<!-- Use semantic tokens from Theme V2 (see .github/instructions/Themes.instructions.md) -->
+<!-- Use semantic tokens from Theme V2 (see .github/instructions/Views/Themes.instructions.md) -->
 <Border Background="{DynamicResource ThemeV2.Input.Background}"
         BorderBrush="{DynamicResource ThemeV2.Input.Border}"
         CornerRadius="{DynamicResource ThemeV2.CornerRadius.Medium}">
@@ -1132,7 +1132,7 @@ Configuration and secrets operations have strict performance budgets:
 - [Copilot Instructions](.github/copilot-instructions.md) - Development patterns & standards
 - [Boot Sequence Guide](<docs/BOOT-SEQUENCE (Complete!).md>) - Detailed startup architecture
 - [Troubleshooting Catalog](docs/TROUBLESHOOTING-CATALOG.md) - Common issues & solutions
-- [Themes Guide](.github/instructions/Themes.instructions.md) - Theme V2 usage
+- [Themes Guide](.github/instructions/Views/Themes.instructions.md) - Theme V2 usage
 - [Spec-Kit Guides](docs/Specify%20Guides/) - Complete spec workflow documentation
 
 ### Package Versions (Central Management)

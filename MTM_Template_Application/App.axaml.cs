@@ -6,6 +6,7 @@ using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MTM_Template_Application.ViewModels;
 using MTM_Template_Application.Views;
 using Serilog;
@@ -65,8 +66,10 @@ public partial class App : Application
                 else
                 {
                     Log.Warning("[App] Service provider is null - falling back to MainWindow");
-                    // Fallback to MainWindow if no DI container
-                    desktop.MainWindow = new MainWindow
+                    // Fallback to MainWindow if no DI container - create minimal logger
+                    var loggerFactory = LoggerFactory.Create(builder => { });
+                    var logger = loggerFactory.CreateLogger<MainWindow>();
+                    desktop.MainWindow = new MainWindow(null!, logger)  // Service provider null - fallback mode
                     {
                         DataContext = new MainViewModel()
                     };

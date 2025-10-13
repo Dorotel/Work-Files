@@ -1,0 +1,64 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Design.PreviewWith>
+        <Border Padding="20" Width="400">
+            <controls:ErrorListPanel MaxHeight="200" />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ErrorListPanel">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        MaxHeight="{TemplateBinding MaxHeight}">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{TemplateBinding Errors}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="controls:ErrorEntry">
+                                    <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="12,8">
+                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                            <!-- Severity Icon -->
+                                            <TextBlock Grid.Column="0"
+                                                       Text="{Binding SeverityIcon}"
+                                                       FontSize="16"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,0,12,0" />
+
+                                            <!-- Message -->
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding Message}"
+                                                       TextWrapping="Wrap"
+                                                       VerticalAlignment="Center"
+                                                       Foreground="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+
+                                            <!-- Timestamp -->
+                                            <TextBlock Grid.Column="2"
+                                                       Text="{Binding Timestamp, StringFormat='{}{0:HH:mm:ss}'}"
+                                                       FontSize="11"
+                                                       VerticalAlignment="Center"
+                                                       Margin="12,0,0,0"
+                                                       Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Default styling -->
+        <Setter Property="Background" Value="{DynamicResource SystemChromeHighColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+</Styles>

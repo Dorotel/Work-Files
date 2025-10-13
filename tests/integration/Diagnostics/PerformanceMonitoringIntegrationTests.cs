@@ -2,6 +2,7 @@ using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MTM_Template_Application.Extensions;
+using MTM_Template_Application.Models.Diagnostics;
 using MTM_Template_Application.Services.Diagnostics;
 using MTM_Template_Application.Services.Secrets;
 using Xunit;
@@ -42,22 +43,20 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
     {
         // Arrange
         var interval = TimeSpan.FromSeconds(1); // 1 second (within valid range 1-30)
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
 
         try
         {
-            // Act - Start monitoring with 1-second interval
-            await _service.StartMonitoringAsync(interval, cancellationToken);
+            // Act - Start monitoring with 1-second interval (use CancellationToken.None for background task)
+            var monitoringTask = _service.StartMonitoringAsync(interval, CancellationToken.None);
 
             // Wait for 2.5 seconds to capture at least 2 snapshots
-            await Task.Delay(2500, cancellationToken);
+            await Task.Delay(2500);
 
             // Stop monitoring
             await _service.StopMonitoringAsync();
 
             // Assert - Verify snapshots were captured
-            var snapshots = await _service.GetRecentSnapshotsAsync(100, cancellationToken);
+            var snapshots = await _service.GetRecentSnapshotsAsync(100, CancellationToken.None);
             snapshots.Should().NotBeNull();
             snapshots.Should().HaveCountGreaterOrEqualTo(2, "at least 2 snapshots should be captured in 2.5 seconds with 1-second interval");
 
@@ -66,154 +65,176 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
         }
         finally
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
+            if (_service.IsMonitoring)
+            {
+                await _service.StopMonitoringAsync();
+            }
         }
     }
 
     [Fact]
-    public async Task GetRecentSnapshotsAsync_Should_Respect_Circular_Buffer_Limit()
+    public async Task ShouldRespectCircularBufferLimit()
     {
         // Arrange
         var interval = TimeSpan.FromSeconds(1); // 1 second
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
 
         try
         {
-            // Act - Start monitoring
-            await _service.StartMonitoringAsync(interval, cancellationToken);
+            // Act - Start monitoring (use CancellationToken.None for background task)
+            var monitoringTask = _service.StartMonitoringAsync(interval, CancellationToken.None);
 
             // Wait for 3 seconds to capture 3 snapshots
-            await Task.Delay(3000, cancellationToken);
+            await Task.Delay(3000);
+
+            // Stop monitoring first to ensure clean state
+            await _service.StopMonitoringAsync();
+
+            // Retrieve all snapshots to get the full list
+            var allSnapshots = await _service.GetRecentSnapshotsAsync(100, CancellationToken.None);
 
             // Retrieve only last 2 snapshots
-            var snapshots = await _service.GetRecentSnapshotsAsync(2, cancellationToken);
-
-            await _service.StopMonitoringAsync();
+            var recentSnapshots = await _service.GetRecentSnapshotsAsync(2, CancellationToken.None);
 
             // Assert - Verify count respects limit
-            snapshots.Should().NotBeNull();
-            snapshots.Should().HaveCountLessOrEqualTo(2, "GetRecentSnapshotsAsync should respect count parameter");
+            recentSnapshots.Should().NotBeNull();
+            recentSnapshots.Count.Should().BeLessOrEqualTo(2, "should only retrieve the requested number of snapshots");
+
+            // Verify buffer returns most recent snapshots
+            if (allSnapshots.Count >= 2)
+            {
+                // The service returns snapshots in the order they were added (oldest to newest)
+                // We should get the last 2 snapshots (most recent)
+                var expected = allSnapshots
+                    .OrderBy(s => s.Timestamp)
+                    .TakeLast(2)
+                    .Select(s => s.Timestamp)
+                    .ToList();
+
+                var actual = recentSnapshots.Select(s => s.Timestamp).ToList();
+                
+                actual.Should().BeEquivalentTo(expected,
+                    "the buffer should return the most recent snapshots"
+                );
+            }
         }
         finally
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
+            if (_service.IsMonitoring)
+            {
+                await _service.StopMonitoringAsync();
+            }
         }
     }
+[Fact]
+public async Task GetCurrentSnapshotAsync_Should_Return_Valid_Snapshot_With_Metrics()
+{
+    // Arrange
+    var cancellationToken = CancellationToken.None;
 
-    [Fact]
-    public async Task GetCurrentSnapshotAsync_Should_Return_Valid_Snapshot_With_Metrics()
+    // Act
+    var snapshot = await _service.GetCurrentSnapshotAsync(cancellationToken);
+
+    // Assert
+    snapshot.Should().NotBeNull();
+    snapshot.Timestamp.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(2), "snapshot timestamp should be recent");
+    snapshot.CpuUsagePercent.Should().BeGreaterOrEqualTo(0, "CPU usage should be non-negative");
+    snapshot.MemoryUsageMB.Should().BeGreaterThan(0, "memory usage should be positive");
+    snapshot.GcGen0Collections.Should().BeGreaterOrEqualTo(0);
+    snapshot.GcGen1Collections.Should().BeGreaterOrEqualTo(0);
+    snapshot.GcGen2Collections.Should().BeGreaterOrEqualTo(0);
+    snapshot.ThreadCount.Should().BeGreaterThan(0, "thread count should be positive");
+}
+
+[Fact]
+public async Task StartMonitoring_Should_Reject_Invalid_Interval_Less_Than_One()
+{
+    // Arrange
+    var invalidInterval = TimeSpan.FromMilliseconds(500); // Invalid (must be 1-30 seconds)
+    var cancellationToken = CancellationToken.None;
+
+    // Act
+    Func<Task> act = async () => await _service.StartMonitoringAsync(invalidInterval, cancellationToken);
+
+    // Assert
+    await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
+        .WithMessage("*interval*");
+}
+
+[Fact]
+public async Task StartMonitoring_Should_Reject_Invalid_Interval_Greater_Than_Thirty()
+{
+    // Arrange
+    var invalidInterval = TimeSpan.FromSeconds(31); // Invalid (must be 1-30)
+    var cancellationToken = CancellationToken.None;
+
+    // Act
+    Func<Task> act = async () => await _service.StartMonitoringAsync(invalidInterval, cancellationToken);
+
+    // Assert
+    await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
+        .WithMessage("*interval*");
+}
+
+[Fact]
+public async Task StopMonitoringAsync_Should_Stop_Background_Task()
+{
+    // Arrange
+    var interval = TimeSpan.FromSeconds(1);
+
+    try
     {
-        // Arrange
-        var cancellationToken = CancellationToken.None;
+        // Act - Start monitoring (use CancellationToken.None for background task)
+        var monitoringTask = _service.StartMonitoringAsync(interval, CancellationToken.None);
+        _service.IsMonitoring.Should().BeTrue("monitoring should be active after start");
 
-        // Act
-        var snapshot = await _service.GetCurrentSnapshotAsync(cancellationToken);
+        await Task.Delay(1500); // Let it capture at least 1 snapshot
+
+        await _service.StopMonitoringAsync();
 
         // Assert
-        snapshot.Should().NotBeNull();
-        snapshot.Timestamp.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(2), "snapshot timestamp should be recent");
-        snapshot.CpuUsagePercent.Should().BeGreaterOrEqualTo(0, "CPU usage should be non-negative");
-        snapshot.MemoryUsageMB.Should().BeGreaterThan(0, "memory usage should be positive");
-        snapshot.GcGen0Collections.Should().BeGreaterOrEqualTo(0);
-        snapshot.GcGen1Collections.Should().BeGreaterOrEqualTo(0);
-        snapshot.GcGen2Collections.Should().BeGreaterOrEqualTo(0);
-        snapshot.ThreadCount.Should().BeGreaterThan(0, "thread count should be positive");
+        _service.IsMonitoring.Should().BeFalse("monitoring should be stopped");
+
+        // Wait a bit and verify no new snapshots are captured
+        var snapshotsBeforeWait = await _service.GetRecentSnapshotsAsync(100, CancellationToken.None);
+        var countBefore = snapshotsBeforeWait.Count;
+
+        // Wait long enough for 2+ snapshots if monitoring was still running
+        await Task.Delay(2500);
+
+        var snapshotsAfterWait = await _service.GetRecentSnapshotsAsync(100, CancellationToken.None);
+        var countAfter = snapshotsAfterWait.Count;
+
+        countAfter.Should().Be(countBefore, "no new snapshots should be captured after stopping");
     }
-
-    [Fact]
-    public async Task StartMonitoring_Should_Reject_Invalid_Interval_Less_Than_One()
+    finally
     {
-        // Arrange
-        var invalidInterval = TimeSpan.FromMilliseconds(500); // Invalid (must be 1-30 seconds)
-        var cancellationToken = CancellationToken.None;
-
-        // Act
-        Func<Task> act = async () => await _service.StartMonitoringAsync(invalidInterval, cancellationToken);
-
-        // Assert
-        await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
-            .WithMessage("*interval*");
-    }
-
-    [Fact]
-    public async Task StartMonitoring_Should_Reject_Invalid_Interval_Greater_Than_Thirty()
-    {
-        // Arrange
-        var invalidInterval = TimeSpan.FromSeconds(31); // Invalid (must be 1-30)
-        var cancellationToken = CancellationToken.None;
-
-        // Act
-        Func<Task> act = async () => await _service.StartMonitoringAsync(invalidInterval, cancellationToken);
-
-        // Assert
-        await act.Should().ThrowAsync<ArgumentOutOfRangeException>()
-            .WithMessage("*interval*");
-    }
-
-    [Fact]
-    public async Task StopMonitoringAsync_Should_Stop_Background_Task()
-    {
-        // Arrange
-        var interval = TimeSpan.FromSeconds(1);
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
-
-        try
+        if (_service.IsMonitoring)
         {
-            // Act
-            await _service.StartMonitoringAsync(interval, cancellationToken);
-            _service.IsMonitoring.Should().BeTrue("monitoring should be active after start");
-
-            await Task.Delay(1500, cancellationToken); // Let it capture at least 1 snapshot
-
             await _service.StopMonitoringAsync();
-
-            // Assert
-            _service.IsMonitoring.Should().BeFalse("monitoring should be stopped");
-
-            // Wait a bit and verify no new snapshots are captured
-            var snapshotsBeforeWait = await _service.GetRecentSnapshotsAsync(100, cancellationToken);
-            var countBefore = snapshotsBeforeWait.Count;
-
-            await Task.Delay(2000, cancellationToken);
-
-            var snapshotsAfterWait = await _service.GetRecentSnapshotsAsync(100, cancellationToken);
-            var countAfter = snapshotsAfterWait.Count;
-
-            countAfter.Should().Be(countBefore, "no new snapshots should be captured after stopping");
-        }
-        finally
-        {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
         }
     }
+}
 
     [Fact]
     public async Task Performance_Monitoring_Should_Have_Low_CPU_Usage()
     {
         // Arrange
         var interval = TimeSpan.FromSeconds(1);
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
 
         try
         {
             // Get baseline CPU before monitoring
-            var baselineSnapshot = await _service.GetCurrentSnapshotAsync(cancellationToken);
+            var baselineSnapshot = await _service.GetCurrentSnapshotAsync(CancellationToken.None);
             var baselineCpu = baselineSnapshot.CpuUsagePercent;
 
-            // Act - Start monitoring
-            await _service.StartMonitoringAsync(interval, cancellationToken);
+            // Act - Start monitoring (use CancellationToken.None for background task)
+            var monitoringTask = _service.StartMonitoringAsync(interval, CancellationToken.None);
 
             // Let it run for 5 seconds
-            await Task.Delay(5000, cancellationToken);
+            await Task.Delay(5000);
 
             // Get CPU usage during monitoring
-            var monitoringSnapshot = await _service.GetCurrentSnapshotAsync(cancellationToken);
+            var monitoringSnapshot = await _service.GetCurrentSnapshotAsync(CancellationToken.None);
             var monitoringCpu = monitoringSnapshot.CpuUsagePercent;
 
             await _service.StopMonitoringAsync();
@@ -224,8 +245,10 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
         }
         finally
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
+            if (_service.IsMonitoring)
+            {
+                await _service.StopMonitoringAsync();
+            }
         }
     }
 
@@ -234,8 +257,6 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
     {
         // Arrange
         var interval = TimeSpan.FromSeconds(1);
-        var cancellationTokenSource = new CancellationTokenSource();
-        var cancellationToken = cancellationTokenSource.Token;
 
         try
         {
@@ -243,12 +264,12 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
             // Note: This test would take 100+ seconds to truly verify 100-snapshot limit.
             // For integration test speed, we'll verify that GetRecentSnapshotsAsync(100) works correctly.
 
-            await _service.StartMonitoringAsync(interval, cancellationToken);
+            var monitoringTask = _service.StartMonitoringAsync(interval, CancellationToken.None);
 
             // Wait for 3 seconds (3 snapshots)
-            await Task.Delay(3000, cancellationToken);
+            await Task.Delay(3000);
 
-            var snapshots = await _service.GetRecentSnapshotsAsync(100, cancellationToken);
+            var snapshots = await _service.GetRecentSnapshotsAsync(100, CancellationToken.None);
 
             await _service.StopMonitoringAsync();
 
@@ -259,27 +280,29 @@ public class PerformanceMonitoringIntegrationTests : IDisposable
         }
         finally
         {
-            cancellationTokenSource.Cancel();
-            cancellationTokenSource.Dispose();
+        if (_service.IsMonitoring)
+        {
+            await _service.StopMonitoringAsync();
         }
     }
+}
 
-    public void Dispose()
+public void Dispose()
+{
+    if (_disposed)
     {
-        if (_disposed)
-        {
-            return;
-        }
-
-        // PerformanceMonitoringService implements IDisposable, but accessed via interface
-        if (_service is IDisposable disposableService)
-        {
-            disposableService.Dispose();
-        }
-
-        _serviceProvider?.Dispose();
-
-        _disposed = true;
-        GC.SuppressFinalize(this);
+        return;
     }
+
+    // PerformanceMonitoringService implements IDisposable, but accessed via interface
+    if (_service is IDisposable disposableService)
+    {
+        disposableService.Dispose();
+    }
+
+    _serviceProvider?.Dispose();
+
+    _disposed = true;
+    GC.SuppressFinalize(this);
+}
 }

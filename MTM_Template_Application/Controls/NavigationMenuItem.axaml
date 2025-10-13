@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Style Selector="controls|NavigationMenuItem">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Button Command="{TemplateBinding Command}" HorizontalContentAlignment="Stretch">
+                    <Grid ColumnDefinitions="Auto,*,Auto" Background="{TemplateBinding ItemBackground}">
+                        <TextBlock Grid.Column="0" Text="{TemplateBinding Icon}" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{TemplateBinding MenuText}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="2" Text="●" Foreground="{DynamicResource SystemAccentColor}" IsVisible="{TemplateBinding IsSelected}" VerticalAlignment="Center" />
+                    </Grid>
+                </Button>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

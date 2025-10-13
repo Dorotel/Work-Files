@@ -1,0 +1,72 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Design.PreviewWith>
+        <Border Padding="20" Width="600">
+            <controls:BootTimelineChart />
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|BootTimelineChart">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        Padding="16">
+                    <ItemsControl ItemsSource="{TemplateBinding Stages}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="controls:BootStageEntry">
+                                <Border Padding="0,8" BorderThickness="0,0,0,1"
+                                        BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}">
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="200,100,100,*">
+                                        <!-- Stage Name -->
+                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding StageName}"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Duration -->
+                                        <TextBlock Grid.Row="0" Grid.Column="1"
+                                                   Text="{Binding DurationText}"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Target -->
+                                        <TextBlock Grid.Row="0" Grid.Column="2"
+                                                   Text="{Binding TargetText}"
+                                                   Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Performance Indicator -->
+                                        <TextBlock Grid.Row="0" Grid.Column="3"
+                                                   Text="{Binding PerformanceIndicator}"
+                                                   Foreground="{Binding PerformanceColor}"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Center" />
+
+                                        <!-- Progress Bar -->
+                                        <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4"
+                                                     Value="{Binding DurationMs}"
+                                                     Maximum="{Binding TargetMs}"
+                                                     Foreground="{Binding PerformanceColor}"
+                                                     Height="4"
+                                                     Margin="0,4,0,0" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Default styling -->
+        <Setter Property="Background" Value="{DynamicResource SystemChromeHighColor}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+
+</Styles>

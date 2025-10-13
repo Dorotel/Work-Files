@@ -1,0 +1,58 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Design.PreviewWith>
+        <Border Padding="20" Width="200">
+            <StackPanel Spacing="10">
+                <controls:MetricDisplay
+                    Label="Memory Usage"
+                    Value="85.4"
+                    Format="F1"
+                    Trend="Up"
+                    Color="#FF5722" />
+                <controls:MetricDisplay
+                    Label="Boot Time"
+                    Value="4520"
+                    Format="N0"
+                    Trend="Down"
+                    Color="#4CAF50" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|MetricDisplay">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <StackPanel>
+                    <!-- Label -->
+                    <TextBlock Text="{TemplateBinding Label}"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               Foreground="{DynamicResource SystemControlForegroundBaseMediumHighBrush}"
+                               Margin="0,0,0,4" />
+
+                    <!-- Value with Trend Indicator -->
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Grid.Column="0"
+                                   Text="{TemplateBinding FormattedValue}"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="{TemplateBinding Color}" />
+
+                        <TextBlock Grid.Column="1"
+                                   Text="{TemplateBinding TrendIndicator}"
+                                   FontSize="16"
+                                   VerticalAlignment="Center"
+                                   Margin="8,0,0,0"
+                                   Foreground="{TemplateBinding Color}" />
+                    </Grid>
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Default styling -->
+        <Setter Property="Color" Value="{DynamicResource SystemControlForegroundBaseHighBrush}" />
+    </Style>
+
+</Styles>

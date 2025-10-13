@@ -1,0 +1,19 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Style Selector="controls|ActionButtonGroup">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ItemsControl ItemsSource="{TemplateBinding Buttons}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="8" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>

@@ -12,7 +12,23 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **Setup and Initialize**:
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Use `gsc workflow next` to automatically advance to task generation phase
+   - This may set up tasks template and return necessary paths
+   
+   **Fallback Approach** (Legacy compatibility):
+   - If GSC is not available or workflow command fails, run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root
+   - Parse FEATURE_DIR and AVAILABLE_DOCS list
+   
+   **Common Path Resolution**:
+   - All paths must be absolute
+   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot")
+   
+   **Create Checkpoint After Tasks Generation**:
+   - After writing tasks.md file, create checkpoint: `gsc rollback checkpoint "tasks-generated"` (if GSC available)
+   - This allows rollback if tasks need regeneration
 
 2. **Load design documents**: Read from FEATURE_DIR:
    - **Required**: plan.md (tech stack, libraries, structure), spec.md (user stories with priorities)

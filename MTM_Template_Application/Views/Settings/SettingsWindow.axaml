@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:MTM_Template_Application.ViewModels.Settings"
+        xmlns:views="using:MTM_Template_Application.Views.Settings"
+        xmlns:controls="using:MTM_Template_Application.Controls"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="MTM_Template_Application.Views.Settings.SettingsWindow"
+        x:DataType="vm:SettingsViewModel"
+        x:CompileBindings="True"
+        Title="Settings"
+        Width="900" Height="600"
+        MinWidth="700" MinHeight="500"
+        WindowStartupLocation="CenterOwner"
+        Icon="/Assets/avalonia-logo.ico">
+
+    <Design.DataContext>
+        <vm:SettingsViewModel />
+    </Design.DataContext>
+
+    <Grid RowDefinitions="*,Auto">
+        <!-- Main Content Area with TabControl -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource ThemeV2.Surface.Primary}"
+                Padding="16">
+            <TabControl x:Name="CategoryTabControl"
+                       TabStripPlacement="Left"
+                       Margin="0">
+                <TabItem Header="General">
+                    <TabItem.Content>
+                        <views:GeneralSettingsView DataContext="{CompiledBinding GeneralSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Database">
+                    <TabItem.Content>
+                        <views:DatabaseSettingsView DataContext="{CompiledBinding DatabaseSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Visual ERP">
+                    <TabItem.Content>
+                        <views:VisualSettingsView DataContext="{CompiledBinding VisualSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Logging">
+                    <TabItem.Content>
+                        <views:LoggingSettingsView DataContext="{CompiledBinding LoggingSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="UI">
+                    <TabItem.Content>
+                        <views:UiSettingsView DataContext="{CompiledBinding UiSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Cache">
+                    <TabItem.Content>
+                        <views:CacheSettingsView DataContext="{CompiledBinding CacheSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Performance">
+                    <TabItem.Content>
+                        <views:PerformanceSettingsView DataContext="{CompiledBinding PerformanceSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+                <TabItem Header="Developer">
+                    <TabItem.Content>
+                        <views:DeveloperSettingsView DataContext="{CompiledBinding DeveloperSettings}" />
+                    </TabItem.Content>
+                </TabItem>
+            </TabControl>
+        </Border>
+
+        <!-- Bottom Action Bar -->
+        <Border Grid.Row="1"
+                Background="{DynamicResource ThemeV2.Surface.Secondary}"
+                BorderBrush="{DynamicResource ThemeV2.Border.Primary}"
+                BorderThickness="0,1,0,0"
+                Padding="16,12">
+            <Grid ColumnDefinitions="*,Auto">
+                <!-- Unsaved Changes Indicator -->
+                <TextBlock Grid.Column="0"
+                          Text="⚠️ You have unsaved changes"
+                          VerticalAlignment="Center"
+                          Foreground="{DynamicResource ThemeV2.Status.Warning}"
+                          IsVisible="{CompiledBinding HasUnsavedChanges}" />
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="1"
+                           Orientation="Horizontal"
+                           Spacing="8">
+                    <Button Content="Export..."
+                            Command="{CompiledBinding ExportCommand}"
+                            Width="100" />
+                    <Button Content="Import..."
+                            Command="{CompiledBinding ImportCommand}"
+                            Width="100" />
+                    <Button Content="Cancel"
+                            Command="{CompiledBinding CancelCommand}"
+                            Width="100" />
+                    <Button Content="Save"
+                            Command="{CompiledBinding SaveCommand}"
+                            Classes="accent"
+                            Width="100" />
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

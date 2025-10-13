@@ -380,4 +380,76 @@ public class DebugTerminalViewModelTests
     }
 
     #endregion
+
+    #region Phase 3: CopyToClipboard Tests (T072)
+
+    [Fact]
+    public void PrepareClipboardDataCommand_ShouldBeEnabledWhenSectionNameProvided()
+    {
+        // Arrange
+        var viewModel = CreateViewModel();
+        var sectionName = "Feature 001: Boot";
+        
+        // Act
+        var canExecute = viewModel.PrepareClipboardDataCommand?.CanExecute(sectionName) ?? false;
+        
+        // Assert
+        canExecute.Should().BeTrue("PrepareClipboardData should be enabled when section name is provided");
+    }
+
+    [Fact]
+    public void PrepareClipboardDataCommand_ShouldExecuteWithValidSectionName()
+    {
+        // Arrange
+        var viewModel = CreateViewModel();
+        var sectionName = "Feature 001: Boot";
+
+        // Act - Execute clipboard data preparation
+        viewModel.PrepareClipboardDataCommand.Execute(sectionName);
+        
+        // Assert - Command executed without exception
+        viewModel.Should().NotBeNull();
+    }
+
+    #endregion
+
+    #region Phase 3: Environment Variables Filtering Tests (T084)
+
+    [Fact]
+    public void EnvironmentVariables_ShouldBeLoadedOnConstruction()
+    {
+        // Arrange & Act
+        var viewModel = CreateViewModel();
+
+        // Assert
+        viewModel.EnvironmentVariables.Should().NotBeNull("Environment variables should be initialized");
+        // We can't predict exact count as it depends on system environment
+        viewModel.EnvironmentVariables.Count.Should().BeGreaterThan(0, "Should have loaded system environment variables");
+    }
+
+    [Fact]
+    public void EnvironmentVariables_ShouldHaveFilteredSensitiveValues()
+    {
+        // Arrange & Act
+        var viewModel = CreateViewModel();
+
+        // Assert - Check if any filtered variables exist
+        var filteredVars = viewModel.EnvironmentVariables.Where(e => e.IsFiltered).ToList();
+        
+        if (filteredVars.Any())
+        {
+            // If sensitive env vars exist, verify they're marked as filtered
+            filteredVars.Should().AllSatisfy(v => 
+                v.Value.Should().Be("***FILTERED***", 
+                    $"Variable {v.Key} contains sensitive keyword and should be filtered"));
+        }
+        
+        // Verify non-filtered variables have actual values
+        var nonFiltered = viewModel.EnvironmentVariables.Where(e => !e.IsFiltered).ToList();
+        nonFiltered.Should().AllSatisfy(v => 
+            v.Value.Should().NotBe("***FILTERED***", 
+                $"Non-sensitive variable {v.Key} should show actual value"));
+    }
+
+    #endregion
 }

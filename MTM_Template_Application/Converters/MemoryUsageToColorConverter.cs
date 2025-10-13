@@ -13,10 +13,11 @@ namespace MTM_Template_Application.Converters;
 /// </summary>
 public class MemoryUsageToColorConverter : IValueConverter
 {
-    private static readonly SolidColorBrush GreenBrush = new(Color.FromRgb(76, 175, 80));   // #4CAF50
-    private static readonly SolidColorBrush YellowBrush = new(Color.FromRgb(255, 235, 59)); // #FFEB3B
-    private static readonly SolidColorBrush RedBrush = new(Color.FromRgb(244, 67, 54));     // #F44336
-    private static readonly SolidColorBrush GrayBrush = new(Color.FromRgb(158, 158, 158));  // #9E9E9E (fallback)
+    // Define colors as static readonly to avoid UI thread issues during static initialization
+    private static readonly Color GreenColor = Color.FromRgb(76, 175, 80);   // #4CAF50
+    private static readonly Color YellowColor = Color.FromRgb(255, 235, 59); // #FFEB3B
+    private static readonly Color RedColor = Color.FromRgb(244, 67, 54);     // #F44336
+    private static readonly Color GrayColor = Color.FromRgb(158, 158, 158);  // #9E9E9E (fallback)
 
     /// <summary>
     /// Threshold for yellow warning (MB)
@@ -31,14 +32,16 @@ public class MemoryUsageToColorConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is not double memoryUsageMB)
-            return GrayBrush; // Fallback for invalid input
+        {
+            return GrayColor; // Fallback for invalid input
+        }
 
         return memoryUsageMB switch
         {
-            < YellowThreshold => GreenBrush,           // Good: <70MB
-            >= YellowThreshold and < RedThreshold => YellowBrush, // Moderate: 70-90MB
-            >= RedThreshold => RedBrush,               // Critical: >90MB
-            _ => GrayBrush                             // Fallback
+            < YellowThreshold => GreenColor,           // Good: <70MB
+            >= YellowThreshold and < RedThreshold => YellowColor, // Moderate: 70-90MB
+            >= RedThreshold => RedColor,               // Critical: >90MB
+            _ => GrayColor                             // Fallback
         };
     }
 

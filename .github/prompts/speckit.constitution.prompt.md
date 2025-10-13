@@ -16,9 +16,22 @@ You are updating the project constitution at `.specify/memory/constitution.md`. 
 
 Follow this execution flow:
 
-1. Load the existing constitution template at `.specify/memory/constitution.md`.
-   - Identify every placeholder token of the form `[ALL_CAPS_IDENTIFIER]`.
-   **IMPORTANT**: The user might require less or more principles than the ones used in the template. If a number is specified, respect that - follow the general template. You will update the doc accordingly.
+1. **Initialize and Validate Environment**:
+
+   **GSC-Enhanced Approach** (Prefer when GSC available):
+   - Run `gsc validate constitution` to verify constitution file exists and get current version
+   - Use returned JSON for constitution path and current state
+   
+   **Fallback Approach** (Legacy compatibility):
+   - If GSC is not available, directly access `.specify/memory/constitution.md`
+   
+   **Common Path**: Load the existing constitution template
+   - Identify every placeholder token of the form `[ALL_CAPS_IDENTIFIER]`
+   - **IMPORTANT**: The user might require less or more principles than the ones used in the template. If a number is specified, respect that - follow the general template. You will update the doc accordingly.
+   
+   **Before Writing Constitution** (Step 7):
+   - Create checkpoint: `gsc rollback checkpoint "constitution-update"` (if GSC available)
+   - This allows rollback if constitution update needs revision
 
 2. Collect/derive values for placeholders:
    - If user input (conversation) supplies a value, use it.
@@ -50,6 +63,18 @@ Follow this execution flow:
    - Removed sections
    - Templates requiring updates (✅ updated / ⚠ pending) with file paths
    - Follow-up TODOs if any placeholders intentionally deferred.
+   
+   **GSC Sync Impact Report Extension** (if GSC available):
+   - Add section documenting GSC prompt alignment status:
+     - List of 8 speckit prompt files (analyze, checklist, clarify, constitution, specify, plan, tasks, implement)
+     - Status for each: ✅ GSC-aligned (integrated) / ⚠ Legacy only (not yet integrated) / ❌ Outdated (needs update)
+     - Note: This helps track Phase 9.3 progress (prompt file GSC integration)
+   
+   **Version History Tracking**:
+   - After Sync Impact Report, add a "## Version History" section if not present
+   - Format: `### vX.Y.Z - YYYY-MM-DD: Brief change description`
+   - Preserve all previous version entries (append, don't replace)
+   - Example: `### v1.2.0 - 2025-10-10: Added Principle 4 (Observability), updated MVVM guidance`
 
 6. Validation before final output:
    - No remaining unexplained bracket tokens.
@@ -59,10 +84,25 @@ Follow this execution flow:
 
 7. Write the completed constitution back to `.specify/memory/constitution.md` (overwrite).
 
+   **Post-Write Inventory** (if GSC available):
+   - Run `gsc housekeeping inventory` (non-blocking) to update documentation inventory
+   - This helps detect if constitution changes affect other documentation references
+   - Failures in inventory should be logged but not block constitution update
+   
+   **Constitution-Related Script Updates**:
+   - If the constitution.md content changes significantly (new principles, removed principles, structure changes):
+     - Review and update all GSC constitution-related scripts if needed:
+       - `.specify/scripts/gsc/validate-constitution.ps1`
+       - `.specify/scripts/gsc/memory-get.ps1` (if it parses constitution)
+       - Any other scripts that parse or validate constitution structure
+     - This ensures GSC commands continue to work correctly with the updated constitution
+
 8. Output a final summary to the user with:
    - New version and bump rationale.
    - Any files flagged for manual follow-up.
+   - **GSC-related updates required**: List any GSC scripts that may need updating (if constitution structure changed)
    - Suggested commit message (e.g., `docs: amend constitution to vX.Y.Z (principle additions + governance update)`).
+   - **Prompt alignment status**: If GSC available, mention current Phase 9.3 progress (X/8 prompts GSC-aligned)
 
 Formatting & Style Requirements:
 - Use Markdown headings exactly as in the template (do not demote/promote levels).

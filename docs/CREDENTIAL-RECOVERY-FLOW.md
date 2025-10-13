@@ -420,7 +420,7 @@ public async Task CredentialRecovery_UserCancels_ReturnsNull()
 - **Feature Specification**: `specs/002-environment-and-configuration/spec.md` (FR-013, NFR-012)
 - **Secrets Service Contract**: `specs/002-environment-and-configuration/contracts/README.md` (ISecretsService)
 - **Implementation Plan**: `specs/002-environment-and-configuration/plan.md`
-- **Theme Guidelines**: `.github/instructions/Themes.instructions.md` (Theme V2 tokens)
+- **Theme Guidelines**: `.github/instructions/Views/Themes.instructions.md` (Theme V2 tokens)
 - **Platform Security**: Windows DPAPI docs, Android KeyStore API docs
 
 ---

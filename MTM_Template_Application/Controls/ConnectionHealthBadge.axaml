@@ -1,0 +1,49 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:MTM_Template_Application.Controls">
+
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <StackPanel Spacing="10">
+                <controls:ConnectionHealthBadge Status="Healthy" LastChecked="2025-10-09T14:30:00" />
+                <controls:ConnectionHealthBadge Status="Degraded" LastChecked="2025-10-09T14:25:00" />
+                <controls:ConnectionHealthBadge Status="Offline" LastChecked="2025-10-09T14:20:00" />
+            </StackPanel>
+        </Border>
+    </Design.PreviewWith>
+
+    <Style Selector="controls|ConnectionHealthBadge">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Background="{TemplateBinding StatusBackground}"
+                        BorderBrush="{TemplateBinding StatusBorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="12"
+                        Padding="12,6">
+                    <Grid ColumnDefinitions="Auto,Auto">
+                        <!-- Status Indicator -->
+                        <TextBlock Grid.Column="0"
+                                   Text="●"
+                                   FontSize="14"
+                                   Foreground="{TemplateBinding StatusColor}"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0" />
+
+                        <!-- Status Info -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="{TemplateBinding StatusText}"
+                                       FontWeight="SemiBold"
+                                       FontSize="12"
+                                       Foreground="{TemplateBinding Foreground}" />
+                            <TextBlock Text="{TemplateBinding LastCheckedText}"
+                                       FontSize="10"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Opacity="0.7" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </Style>
+
+</Styles>
