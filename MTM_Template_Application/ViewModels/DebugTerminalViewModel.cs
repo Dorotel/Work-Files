@@ -12,6 +12,7 @@ using MTM_Template_Application.Models.Diagnostics;
 using MTM_Template_Application.Services.Boot;
 using MTM_Template_Application.Services.Configuration;
 using MTM_Template_Application.Services.Diagnostics;
+using MTM_Template_Application.Services.Localization;
 using MTM_Template_Application.Services.Secrets;
 
 namespace MTM_Template_Application.ViewModels;
@@ -228,8 +229,42 @@ public partial class DebugTerminalViewModel : ViewModelBase
     [ObservableProperty]
     private ErrorSeverity _selectedSeverityFilter = ErrorSeverity.Error;
 
+    // Phase 3: Navigation & Feature Management (T081)
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsBootSectionVisible))]
+    [NotifyPropertyChangedFor(nameof(IsConfigSectionVisible))]
+    [NotifyPropertyChangedFor(nameof(IsDiagnosticsSectionVisible))]
+    [NotifyPropertyChangedFor(nameof(IsVisualSectionVisible))]
+    private string? _selectedFeature = "Feature 001: Boot";
+
+    // Section visibility properties (T086)
+    public bool IsBootSectionVisible => SelectedFeature == "Feature 001: Boot";
+    public bool IsConfigSectionVisible => SelectedFeature == "Feature 002: Config";
+    public bool IsDiagnosticsSectionVisible => SelectedFeature == "Feature 003: Diagnostics";
+    public bool IsVisualSectionVisible => SelectedFeature == "Feature 005: VISUAL";
+
+    [ObservableProperty]
+    private bool _isPaneOpen = true;
+
+    [ObservableProperty]
+    private ObservableCollection<string> _featureSections = new()
+    {
+        "Feature 001: Boot",
+        "Feature 002: Config",
+        "Feature 003: Diagnostics",
+        "Feature 005: VISUAL"
+    };
+
+    // Phase 3: Environment Variables (T084)
+    [ObservableProperty]
+    private ObservableCollection<EnvironmentVariableDisplay> _environmentVariables = new();
+
+    [ObservableProperty]
+    private ObservableCollection<EnvironmentVariableDisplay> _filteredEnvironmentVariables = new();
+
     public DebugTerminalViewModel(
         ILogger<DebugTerminalViewModel> logger,
+
         IBootOrchestrator? bootOrchestrator = null,
         IConfigurationService? configurationService = null,
         ISecretsService? secretsService = null,
@@ -245,7 +280,9 @@ public partial class DebugTerminalViewModel : ViewModelBase
         IPerformanceMonitoringService? performanceMonitoringService = null,
         IDiagnosticsServiceExtensions? diagnosticsServiceExtensions = null,
         IExportService? exportService = null)
+        : base()
     {
+        ArgumentNullException.ThrowIfNull(logger);        
         _logger = logger;
         _bootOrchestrator = bootOrchestrator;
         _configurationService = configurationService;
@@ -569,6 +606,7 @@ public partial class DebugTerminalViewModel : ViewModelBase
         LoadNavigationData();
         LoadLocalizationData();
         LoadUserFolderData();
+        LoadEnvironmentVariables(); // Phase 3: T084
     }
 
     /// <summary>
@@ -1157,6 +1195,117 @@ public partial class DebugTerminalViewModel : ViewModelBase
 
         _logger.LogDebug("Boot timeline recalculated: {TotalMs}ms total, slowest: {Slowest}",
             TotalBootTime.TotalMilliseconds, SlowestStage);
+    }
+
+    // Phase 3: Navigation Commands (T081, T086)
+    [RelayCommand]
+    private void TogglePane()
+    {
+        IsPaneOpen = !IsPaneOpen;
+        _logger.LogDebug("SplitView pane toggled: IsPaneOpen={IsPaneOpen}", IsPaneOpen);
+    }
+
+    [RelayCommand]
+    private void SelectFeature(string? featureName)
+    {
+        if (string.IsNullOrWhiteSpace(featureName))
+        {
+            _logger.LogWarning("SelectFeature called with null or empty feature name");
+            return;
+        }
+
+        if (!FeatureSections.Contains(featureName))
+        {
+            _logger.LogWarning("Feature not found in FeatureSections: {Feature}", featureName);
+            return;
+        }
+
+        SelectedFeature = featureName;
+        _logger.LogInformation("Feature selected: {Feature}", featureName);
+    }
+
+    [RelayCommand]
+    private void RefreshCurrentFeature()
+    {
+        _logger.LogInformation("Refreshing current feature: {Feature}", SelectedFeature);
+        LoadDiagnostics(); // Reload all diagnostic data
+    }
+
+    // Phase 3: CopyToClipboard Command (T082)
+    // Note: Actual clipboard interaction happens in code-behind to access TopLevel
+    [ObservableProperty]
+    private string? _clipboardData;
+
+    [RelayCommand(CanExecute = nameof(CanPrepareClipboardData))]
+    private void PrepareClipboardData(string? sectionName)
+    {
+        if (string.IsNullOrWhiteSpace(sectionName))
+        {
+            _logger.LogWarning("PrepareClipboardData called with null or empty section name");
+            ClipboardData = null;
+            return;
+        }
+
+        try
+        {
+            object data = sectionName switch
+            {
+                "Boot" => new { BootStatus, TotalBootDurationMs, Stage0DurationMs, Stage1DurationMs, Stage2DurationMs, MemoryUsageMB },
+                "Config" => new { ConfigurationStatus, EnvironmentType, ConfigurationSettings },
+                "Diagnostics" => new { CurrentPerformance, PerformanceHistory, RecentErrors, ErrorCount },
+                "Environment" => new { EnvironmentVariables = FilteredEnvironmentVariables },
+                _ => new { Message = "Unknown section" }
+            };
+
+            ClipboardData = System.Text.Json.JsonSerializer.Serialize(data, new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            _logger.LogInformation("Prepared clipboard data for {Section} ({Length} chars)", sectionName, ClipboardData.Length);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to prepare clipboard data for {Section}", sectionName);
+            ClipboardData = null;
+        }
+    }
+
+    private bool CanPrepareClipboardData(string? sectionName) => !string.IsNullOrWhiteSpace(sectionName);
+
+    // Phase 3: Environment Variables Filtering (T084)
+    private void LoadEnvironmentVariables()
+    {
+        try
+        {
+            var envVars = Environment.GetEnvironmentVariables();
+            var sensitiveKeywords = new[] { "PASSWORD", "TOKEN", "SECRET", "KEY", "CONNECTION_STRING" };
+
+            EnvironmentVariables.Clear();
+            foreach (System.Collections.DictionaryEntry entry in envVars)
+            {
+                var key = entry.Key?.ToString() ?? string.Empty;
+                var value = entry.Value?.ToString() ?? string.Empty;
+                var isFiltered = sensitiveKeywords.Any(keyword => key.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+                EnvironmentVariables.Add(new EnvironmentVariableDisplay(
+                    key,
+                    isFiltered ? "***FILTERED***" : value,
+                    isFiltered
+                ));
+            }
+
+            // Initialize filtered collection
+            FilteredEnvironmentVariables = new ObservableCollection<EnvironmentVariableDisplay>(EnvironmentVariables);
+
+            _logger.LogDebug("Loaded {Count} environment variables ({Filtered} filtered)",
+                EnvironmentVariables.Count,
+                EnvironmentVariables.Count(e => e.IsFiltered));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load environment variables");
+        }
     }
 }
 
